@@ -15,3 +15,6 @@
   from = "/drive-webhook"
   to = "/.netlify/functions/drive-webhook"
   status = 200
+
+  [[plugins]]
+package = "@netlify/plugin-functions-install-core"
