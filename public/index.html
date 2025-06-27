@@ -1,0 +1,1004 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life is MUSIC - Il Fenomeno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎵</text></svg>">
+    <style>
+        :root {
+            --primary-bg-light: #4A90E2; /* Un blu più vivace per lo sfondo principale */
+            --secondary-card-bg: rgba(26, 60, 92, 0.9); /* Un blu scuro più distinto per le card */
+            --gold: #FFD700;
+            --accent-magenta: #E000B2; /* Magenta vibrante */
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary-bg-light);
+            color: #FFFFFF;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23FFFFFF' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.18; /* Increased opacity for more visibility */
+            z-index: -1;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--gold);
+        }
+        
+        .text-gold {
+            color: var(--gold);
+        }
+        
+        .bg-gold {
+            background-color: var(--gold);
+        }
+        
+        .text-accent-magenta {
+            color: var(--accent-magenta);
+        }
+        
+        .bg-accent-magenta {
+            background-color: var(--accent-magenta);
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--gold);
+            border-radius: 2px;
+        }
+        
+        .navbar {
+            background-color: rgba(74, 144, 226, 0.95); /* Semi-trasparente Primary Blue */
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        
+        /* Stili per i diagrammi a blocchi/freccia */
+        .diagram-node {
+            background-color: var(--accent-magenta); /* Magenta vibrante */
+            color: #FFFFFF;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 150px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .diagram-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .diagram-arrow {
+            color: var(--gold); /* Giallo Oro per le frecce */
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .diagram-funnel-layer {
+            background-color: rgba(224, 0, 178, 0.5); /* Magenta Trasparente */
+            color: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-funnel-layer:hover {
+            transform: scale(1.02);
+        }
+        
+        .diagram-funnel-layer::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -20px; /* Position below the current layer */
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid var(--gold); /* Giallo Oro arrow pointing down */
+            z-index: 1;
+        }
+        
+        .diagram-funnel-layer:last-child::after {
+            display: none;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero-title {
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        .hero-subtitle {
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-magenta); /* Changed to magenta */
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            background-color: var(--gold); /* Change to gold on hover */
+            color: black; /* Text to black on gold hover */
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .section-card {
+            background-color: var(--secondary-card-bg); /* Darker blue for cards */
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible border */
+            transition: transform 0.3s ease;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background-color: var(--accent-magenta); /* Magenta for table headers */
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.08); /* Slightly more visible even row */
+        }
+        
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.15); /* More noticeable hover */
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible border */
+        }
+        
+        .music-note {
+            position: absolute;
+            opacity: 0.08; /* More visible */
+            font-size: 3rem;
+            z-index: -1;
+            animation: float 15s infinite ease-in-out;
+            color: var(--gold); /* Gold notes */
+        }
+        /* New Sound wave SVG */
+        .sound-wave {
+            position: absolute;
+            opacity: 0.05; /* Slightly more visible */
+            z-index: -1;
+            animation: wave-float 20s infinite linear;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+        }
+
+        .wave-1 { top: 5%; right: 15%; width: 150px; height: 100px; animation-delay: 0s; }
+        .wave-2 { bottom: 20%; left: 10%; width: 200px; height: 120px; animation-delay: 7s; }
+        .wave-3 { top: 50%; right: 5%; width: 100px; height: 80px; animation-delay: 14s; }
+
+
+        .note-1 { top: 10%; left: 5%; animation-delay: 0s; }
+        .note-2 { top: 25%; right: 10%; animation-delay: 3s; }
+        .note-3 { bottom: 15%; left: 15%; animation-delay: 6s; }
+        .note-4 { bottom: 30%; right: 20%; animation-delay: 9s; }
+        .note-5 { top: 40%; left: 25%; animation-delay: 12s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.03);
+                text-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+            }
+            100% {
+                transform: scale(1);
+                text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+            75% {
+                transform: translateY(20px) rotate(-5deg);
+            }
+        }
+
+        @keyframes wave-float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(10px, -15px) rotate(3deg);
+            }
+            50% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            75% {
+                transform: translate(-10px, 15px) rotate(-3deg);
+            }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .navbar a {
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+        
+        .navbar a:hover::after {
+            width: 100%;
+        }
+
+        /* Document display styles */
+        .document-card {
+            background-color: var(--secondary-card-bg); /* Darker blue for document cards */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2); /* More visible border */
+        }
+
+        .document-accordion summary {
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: rgba(0, 0, 0, 0.4); /* Slightly darker for summary header */
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--gold);
+            outline: none; /* Remove outline on focus */
+        }
+        
+        .document-accordion summary:hover {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .document-accordion summary::-webkit-details-marker {
+            display: none; /* Hide default marker */
+        }
+
+        .document-accordion summary i {
+            transition: transform 0.3s ease;
+        }
+
+        .document-accordion details[open] summary i {
+            transform: rotate(90deg); /* Rotate arrow when open */
+        }
+
+        .document-content {
+            background-color: rgba(0, 0, 0, 0.3); /* Slightly more opaque content background */
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 1.6;
+            margin-top: 10px; /* Space between summary and content */
+        }
+
+        .document-content p {
+            margin-bottom: 1em; /* Space between paragraphs */
+        }
+        .document-content strong {
+            color: var(--gold);
+        }
+        /* Specific styles for Project Proposal image for responsive display */
+        .document-content .responsive-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1rem auto; /* Center the image */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4); /* Slightly stronger shadow */
+        }
+        /* Styles for RAG section */
+        #rag-section {
+            padding: 40px;
+            background-color: var(--secondary-card-bg);
+            border-radius: 15px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        #rag-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        #rag-section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--gold);
+            border-radius: 2px;
+        }
+        #rag-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            margin-bottom: 20px;
+            box-sizing: border-box; /* Include padding in width */
+        }
+        #rag-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        #rag-button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: var(--accent-magenta);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        #rag-button:hover {
+            background-color: var(--gold);
+            color: black;
+            transform: translateY(-2px);
+        }
+        #rag-response {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        #rag-response.has-content {
+            text-align: left;
+            font-style: normal;
+            color: white;
+            display: block;
+        }
+        #rag-response .sources-list {
+            margin-top: 15px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.3);
+            padding-top: 15px;
+        }
+        #rag-response .sources-list h4 {
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+        #rag-response .sources-list ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+        #rag-response .sources-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body class="leading-relaxed">
+    <div class="music-note note-1">♪</div>
+    <div class="music-note note-2">♫</div>
+    <div class="music-note note-3">♬</div>
+    <div class="music-note note-4">♩</div>
+    <div class="music-note note-5">♪</div>
+
+    <div class="sound-wave wave-1">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 50C25 20 75 20 90 50C75 80 25 80 10 50Z" stroke="var(--accent-magenta)" stroke-width="2" stroke-opacity="0.5"/>
+            <path d="M15 50C30 25 70 25 85 50C70 75 30 75 15 50Z" stroke="var(--gold)" stroke-width="2" stroke-opacity="0.5"/>
+        </svg>
+    </div>
+    <div class="sound-wave wave-2">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 40C20 10 80 10 95 40C80 70 20 70 5 40Z" stroke="var(--accent-magenta)" stroke-width="2" stroke-opacity="0.5"/>
+            <path d="M10 40C25 15 75 15 90 40C75 65 25 65 10 40Z" stroke="var(--gold)" stroke-width="2" stroke-opacity="0.5"/>
+        </svg>
+    </div>
+    <div class="sound-wave wave-3">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 50C15 20 85 20 100 50C85 80 15 80 0 50Z" stroke="var(--accent-magenta)" stroke-width="2" stroke-opacity="0.5"/>
+        </svg>
+    </div>
+
+    <nav class="navbar fixed w-full p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-yellow-gold flex items-center">
+                <i class="fas fa-music mr-2"></i>Life is MUSIC
+            </a>
+            <div class="space-x-4 flex">
+                <a href="#concept" class="text-white hover:text-yellow-gold transition duration-300">Concept</a>
+                <a href="#artistico" class="text-white hover:text-yellow-gold transition duration-300">Artistico</a>
+                <a href="#partnership" class="text-white hover:text-yellow-gold transition duration-300">Partnership</a>
+                <a href="#strategia" class="text-white hover:text-yellow-gold transition duration-300">Strategia</a>
+                <a href="#roadmap" class="text-white hover:text-yellow-gold transition duration-300">Roadmap</a>
+                <a href="#documentazione" class="text-white hover:text-yellow-gold transition duration-300">Documentazione</a>
+                <a href="#rag-section" class="text-white hover:text-yellow-gold transition duration-300">Chiedi al Doc!</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative h-screen flex items-center justify-center text-center bg-cover bg-center" style="background-image: linear-gradient(rgba(74, 144, 226, 0.8), rgba(74, 144, 226, 0.9)), url('https://placehold.co/1920x1080/4A90E2/FFD700?text=LIFE%20IS%20MUSIC%20SHOW');">
+        <div class="hero-content p-8 rounded-lg max-w-4xl mx-auto">
+            <h1 class="hero-title text-6xl md:text-8xl font-bold text-yellow-gold mb-6">Life is MUSIC</h1>
+            <p class="hero-subtitle text-white text-xl md:text-2xl mb-8">Un'esperienza musicale travolgente che celebra le più grandi hit dagli anni '70 agli anni 2000, unendo generazioni attraverso ritmi coinvolgenti e performance mozzafiato.</p>
+            <a href="#concept" class="btn-primary inline-block">
+                Scopri lo show <i class="fas fa-arrow-down ml-2"></i>
+            </a>
+            
+            <div class="stats-grid mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
+                    <div class="text-yellow-gold mb-2"><i class="fas fa-users text-4xl"></i></div>
+                    <div class="stat-value text-3xl font-bold">18</div>
+                    <div class="stat-label text-sm">Artisti sul palco</div>
+                </div>
+                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
+                    <div class="text-yellow-gold mb-2"><i class="fas fa-music text-4xl"></i></div>
+                    <div class="stat-value text-3xl font-bold">40+</div>
+                    <div class="stat-label text-sm">Successi musicali</div>
+                </div>
+                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
+                    <div class="text-yellow-gold mb-2"><i class="fas fa-clock text-4xl"></i></div>
+                    <div class="stat-value text-3xl font-bold">165'</div>
+                    <div class="stat-label text-sm">Durata dello show</div>
+                </div>
+                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
+                    <div class="text-yellow-gold mb-2"><i class="fas fa-calendar-alt text-4xl"></i></div>
+                    <div class="stat-value text-3xl font-bold">2025</div>
+                    <div class="stat-label text-sm">Anno di debutto</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="youtube-playlist" class="mb-16">
+        <div class="section-card animate-on-scroll text-center">
+            <h2 class="section-title text-4xl mb-8 mx-auto inline-block">Lasciati Ispirare dalla Musica!</h2>
+            <p class="text-lg mb-8">Ascolta la playlist ufficiale che ha ispirato lo show "Life is MUSIC" e immergiti nelle sonorità che ti faranno ballare e sognare.</p>
+            <div class="flex justify-center items-center">
+                <iframe class="rounded-lg shadow-xl w-full max-w-2xl aspect-video" src="https://www.youtube.com/embed/videoseries?list=PL3B8bEPeCDHHD1lY9xfXxCJ-WWYHOzbbc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <p class="text-sm text-gray-400 mt-4">Playlist curata per farti vivere l'energia di "Life is MUSIC".</p>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 lg:px-12 py-16 mt-12">
+        <section id="concept" class="mb-16">
+            <div class="section-card animate-on-scroll">
+                <h2 class="section-title text-4xl mb-8">1.0. Executive Summary: Visione, Prodotto, Mercato</h2>
+                <p class="text-lg mb-6">"Life is MUSIC" è un prodotto di intrattenimento musicale dal vivo, concepito per intercettare un target demografico specifico (25-55 anni) con alta capacità di spesa e forte propensione alla nostalgia. A differenza di cover band o tributi generici, il nostro è uno show-experience: un evento di 2 ore e 45 minuti (inclusivo di intervallo) che unisce l'eccellenza musicale di una band di 11 elementi, la potenza vocale di 4 performer e l'impatto visivo di 6 ballerini professionisti.</p>
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Il Prodotto</h3>
+                <p class="text-lg mb-6">Uno spettacolo modulare, scalabile, adatto a teatri (come il Teatro Cartiera Carrara), arene estive e eventi corporate di alto profilo. La scaletta, scientificamente costruita su hit ad alto BPM e impatto emotivo, garantisce il massimo coinvolgimento del pubblico.</p>
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">La Sfida e la Soluzione</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">La Sfida:</h4>
+                        <p class="text-lg">L'assenza di capitale iniziale.</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">La Soluzione:</h4>
+                        <p class="text-lg">Un modello di business a "equity for talent" che trasforma il cast in partner, e una strategia di marketing "Reverse Hype" che genera domanda organica prima di investire in pubblicità tradizionale, minimizzando i rischi e massimizzando l'appeal per investitori e promoter.</p>
+                    </div>
+                </div>
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Ecosistema del Progetto</h3>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex flex-wrap items-center justify-center gap-4 md:flex-nowrap md:gap-8" style="background-color: rgba(0, 0, 0, 0.3);">
+                    <div class="diagram-node">TALENTO (Cast)</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">PRODOTTO (Show)</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">FENOMENO MEDIATICO</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">PROFITTO</div>
+                    <div class="diagram-arrow">→</div>
+                    <div class="diagram-node">Reinvestimento</div>
+                </div>
+                <p class="text-sm text-gray-400 mt-2 text-center">Diagramma a flusso che mostra il ciclo virtuoso del progetto.</p>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="section-title text-4xl mb-8 text-center">Perché Life is MUSIC</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card animate-on-scroll section-card">
+                    <div class="text-yellow-gold mb-2"><i class="fas fa-star text-4xl"></i></div>
+                    <h3 class="text-gold text-xl font-bold mb-3">Performance Unica</h3>
+                    <p class="text-white">Uno show di alta qualità con 18 artisti sul palco, coreografie mozzafiato e arrangiamenti musicali innovativi.</p>
+                </div>
+                <div class="feature-card animate-on-scroll section-card">
+                    <div class="text-yellow-gold mb-2"><i class="fas fa-users text-4xl"></i></div>
+                    <h3 class="text-gold text-xl font-bold mb-3">Modello Innovativo</h3>
+                    <p class="text-white">Partnership con i talenti attraverso un modello "equity for talent" che crea un team coeso e motivato.</p>
+                </div>
+                <div class="feature-card animate-on-scroll section-card">
+                    <div class="text-yellow-gold mb-2"><i class="fas fa-bullhorn text-4xl"></i></div>
+                    <h3 class="text-gold text-xl font-bold mb-3">Marketing Efficace</h3>
+                    <p class="text-white">Strategia "Reverse Hype" che costruisce aspettativa e coinvolgimento prima del debutto.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="artistico" class="mb-16">
+            <div class="section-card animate-on-scroll">
+                <h2 class="section-title text-4xl mb-8">2.0. Il Progetto Artistico: Un'Esperienza Immersiva</h2>
+                <p class="text-lg mb-6">Il fulcro di "Life is MUSIC" è la qualità artistica senza compromessi. Non un semplice concerto, ma un viaggio emotivo attraverso le hit che hanno segnato intere generazioni. Lo show è pensato per unire nostalgia e innovazione, offrendo un'esperienza che va oltre la semplice esecuzione musicale.</p>
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Dettagli dello Spettacolo</h3>
+                <ul class="list-disc list-inside text-lg mb-6">
+                    <li class="mb-2">Durata: 165 minuti (inclusa pausa di 15 minuti)</li>
+                    <li class="mb-2">Cast: 11 musicisti (band completa), 4 vocalist di spicco, 6 ballerini professionisti.</li>
+                    <li class="mb-2">Scaletta: Oltre 40 hit riarrangiate, un mix esplosivo dagli anni '70 al 2000.</li>
+                    <li class="mb-2">Produzione: Direzione artistica e arrangiamenti curati da professionisti del settore.</li>
+                </ul>
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Elementi distintivi:</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Qualità Sonora:</h4>
+                        <p class="text-lg">Arrangiamenti inediti che rispettano l'originale ma aggiungono un tocco moderno, curati nei minimi dettagli per un'esperienza audio coinvolgente.</p>
+                    </div>
+                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Impatto Visivo:</h4>
+                        <p class="text-lg">Coreografie dinamiche, scenografie modulari e un sapiente uso delle luci e delle proiezioni video creano un'atmosfera unica per ogni brano.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="partnership" class="mb-16">
+            <div class="section-card animate-on-scroll">
+                <h2 class="section-title text-4xl mb-8">3.0. Il Modello di Business e Partnership</h2>
+                <p class="text-lg mb-6">Il modello di business di "Life is MUSIC" è innovativo e mira a trasformare le sfide in opportunità. La chiave è il modello "equity for talent" (equità per il talento) che trasforma il cast artistico da semplici ingaggiati a veri e propri partner del progetto.</p>
+                
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Equity for Talent: Un Team di Partner</h3>
+                <p class="text-lg mb-6">Invece di un approccio tradizionale basato su compensi fissi, offriamo al nostro cast una quota sui profitti. Questo allinea gli interessi di tutti i partecipanti, motivando l'intero team a raggiungere il successo dello show. Vantaggi:</p>
+                <ul class="list-disc list-inside text-lg mb-6">
+                    <li class="mb-2">**Motivazione Accresciuta**: Ogni membro del cast è incentivato a contribuire al massimo, sapendo che il successo dello show è anche il proprio successo economico.</li>
+                    <li class="mb-2">**Riduzione del Rischio Iniziale**: Si riduce la necessità di un grande capitale iniziale per coprire i costi fissi del personale.</li>
+                    <li class="mb-2">**Maggiore Stabilità**: Il team è più propenso a rimanere a lungo termine nel progetto.</li>
+                </ul>
+
+                <h3 class="3xl font-bold text-accent-magenta mb-4">Modello di Entrate</h3>
+                <p class="text-lg mb-6">Le nostre principali fonti di entrata includono:</p>
+                <div class="chart-container">
+                    <canvas id="revenueMixChart"></canvas>
+                </div>
+                <p class="text-sm text-gray-400 mt-2 text-center">Distribuzione prevista delle entrate.</p>
+            </div>
+        </section>
+
+        <section id="strategia" class="mb-16">
+            <div class="section-card animate-on-scroll">
+                <h2 class="section-title text-4xl mb-8">4.0. Strategia di Marketing e Crescita: Il "Reverse Hype"</h2>
+                <p class="text-lg mb-6">La nostra strategia di marketing è tanto innovativa quanto lo show stesso. Il "Reverse Hype" è un approccio che genera domanda e coinvolgimento prima di investire massicciamente in pubblicità tradizionale, creando un fenomeno virale e una base di fan dedicati.</p>
+
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Come Funziona il "Reverse Hype":</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 1: Coinvolgimento del Talento</h4>
+                        <p class="text-lg">Utilizziamo la fan base esistente del nostro cast artistico e del team di produzione per generare interesse iniziale. Ogni membro del team promuove lo show sui propri canali social, creando un passaparola autentico e mirato.</p>
+                    </div>
+                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 2: Contenuti Esclusivi</h4>
+                        <p class="text-lg">Produciamo "pillole" video e contenuti dietro le quinte (backstage) che mostrano il processo creativo, le prove, le interviste agli artisti. Questi contenuti esclusivi sono distribuiti sui social media, generando curiosità e aspettativa.</p>
+                    </div>
+                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 3: Campagne Targettizzate</h4>
+                        <p class="text-lg">Solo dopo aver generato un solido "buzz" e identificato il pubblico più ricettivo, lanciamo campagne pubblicitarie digitali mirate (es. Facebook Ads, Google Ads) e partnership con influencer per amplificare ulteriormente il messaggio.</p>
+                    </div>
+                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 4: Vendita e Fenomeno</h4>
+                        <p class="text-lg">La domanda pre-esistente si traduce in prevendite solide, che a loro volta attraggono l'attenzione dei media tradizionali e dei promoter, creando un "fenomeno" e un ciclo virtuoso di crescita.</p>
+                    </div>
+                </div>
+
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Imbuto di Marketing (Funnel)</h3>
+                <div class="flex flex-col items-center justify-center gap-4">
+                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">AWARENESS (Social Media, Passaparola, Contenuti Backstage)</div>
+                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">INTEREST (Pillole video, Anteprime, Interviste)</div>
+                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">CONSIDERATION (Landing Page, Dettagli Show, Recensioni Anticipate)</div>
+                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">CONVERSION (Ticket Sales, Eventi Privati, Sponsorizzazioni)</div>
+                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">ADVOCACY (Fan Base, Contenuti Generati dagli Utenti, Passaparola Post-Show)</div>
+                </div>
+                <p class="text-sm text-gray-400 mt-2 text-center">Un approccio a imbuto per convertire l'interesse in profitto e advocacy.</p>
+            </div>
+        </section>
+
+        <section id="roadmap" class="mb-16">
+            <div class="section-card animate-on-scroll">
+                <h2 class="section-title text-4xl mb-8">5.0. Roadmap e Tempistiche</h2>
+                <p class="text-lg mb-6">La nostra roadmap è ambiziosa ma realistica, progettata per portare "Life is MUSIC" dal concept al successo sul palco, con fasi ben definite e obiettivi chiari.</p>
+                
+                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Fasi del Progetto</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Fase</th>
+                                <th>Periodo</th>
+                                <th>Attività Principali</th>
+                                <th>Obiettivi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>**Pre-Produzione**</td>
+                                <td>Giugno 2024 - Gennaio 2025</td>
+                                <td>Definizione scaletta, arrangiamenti, selezione cast, primi incontri di marketing, creazione contenuti "Reverse Hype".</td>
+                                <td>Cast completo, repertorio definito, materiali marketing iniziali pronti.</td>
+                            </tr>
+                            <tr>
+                                <td>**Produzione**</td>
+                                <td>Febbraio 2025 - Maggio 2025</td>
+                                <td>Prove intensive (musicali, vocali, coreografiche), allestimento scenico, finalizzazione dettagli tecnici, lancio campagna "Reverse Hype" avanzata.</td>
+                                <td>Show pronto per il debutto, forte "buzz" mediatico, prevendite in corso.</td>
+                            </tr>
+                            <tr>
+                                <td>**Debutto e Tour Iniziale**</td>
+                                <td>Giugno 2025 - Dicembre 2025</td>
+                                <td>Debutto ufficiale, prime date in teatri selezionati, ottimizzazione continua dello show, ricerca di promoter e sponsor aggiuntivi.</td>
+                                <td>Feedback positivo del pubblico, riempimento sale, espansione della base fan.</td>
+                            </tr>
+                            <tr>
+                                <td>**Espansione e Consolidamento**</td>
+                                <td>Gennaio 2026 in poi</td>
+                                <td>Estensione del tour a livello nazionale e internazionale, sviluppo merchandising, partnership con brand, esplorazione nuovi format (es. TV, streaming).</td>
+                                <td>"Life is MUSIC" come brand riconosciuto, massimizzazione dei profitti, crescita a lungo termine.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-sm text-gray-400 mt-2 text-center">Timeline dettagliata delle fasi di sviluppo del progetto.</p>
+            </div>
+        </section>
+
+        <section id="documentazione" class="mb-16">
+            <div class="section-card animate-on-scroll">
+                <h2 class="section-title text-4xl mb-8">6.0. Documentazione e Allegati</h2>
+                <p class="text-lg mb-6">Per una comprensione più approfondita del progetto "Life is MUSIC", sono disponibili i seguenti documenti aggiuntivi che dettagliano aspetti specifici del concept, della produzione e della strategia.</p>
+
+                <div class="document-accordion">
+                    <details>
+                        <summary>Project Proposal Completa <i class="fas fa-chevron-right ml-2"></i></summary>
+                        <div class="document-content">
+                            <p>Questo documento fornisce un'analisi dettagliata di tutti gli aspetti del progetto "Life is MUSIC", dalla visione artistica al piano finanziario.</p>
+                            <img src="uploaded:image_395e5e.png-692f6c95-67be-451a-a23e-c7a3b4b3d6a6" alt="Project Proposal Flowchart" class="responsive-img">
+                            <p>Il Project Proposal approfondisce ogni sezione presentata in questa pagina, offrendo dati, statistiche e proiezioni. È ideale per investitori, partner strategici e chiunque voglia comprendere la solidità e il potenziale di questo show. Include analisi di mercato, proiezioni di costo/ricavo e strategie di engagement del pubblico.</p>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Piano di Marketing Dettagliato <i class="fas fa-chevron-right ml-2"></i></summary>
+                        <div class="document-content">
+                            <p>Un'esplorazione approfondita della nostra strategia "Reverse Hype", con esempi di campagne, target di pubblico e metriche di successo. Questo piano delinea come costruiremo il buzz, genereremo domanda e massimizzeremo la visibilità dello show attraverso canali digitali e partnership strategiche.</p>
+                            <img src="uploaded:image_49d223.png-19292e6a-867e-467d-92de-447839770265" alt="Marketing Funnel" class="responsive-img">
+                            <p>Il documento include: analisi dei canali social media, calendario editoriale per i contenuti esclusivi, strategie di influencer marketing, e un breakdown dettagliato del budget di marketing per ogni fase del lancio e della promozione.</p>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Scheda Tecnica dello Spettacolo <i class="fas fa-chevron-right ml-2"></i></summary>
+                        <div class="document-content">
+                            <p>Dettagli tecnici sull'allestimento scenico, requisiti audio e luci, planimetrie e specifiche per le location. Essenziale per teatri, venue e team di produzione.</p>
+                            <p>Questa scheda tecnica copre tutto, dall'impianto audio necessario (numero di monitor, tipo di mixer) all'illuminazione (teste mobili, wash, effetti speciali), fino ai requisiti di palco e backline per la band e i ballerini. Include anche note sulla sicurezza e sulla gestione del personale sul palco e nel backstage.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section id="rag-section">
+            <h2 class="section-title text-4xl">Chiedi al Doc!</h2>
+            <p class="text-lg mb-6 text-center">Hai domande specifiche sul progetto? Inserisci la tua domanda qui sotto e il nostro sistema AI (RAG) cercherà le risposte nei documenti forniti!</p>
+            <textarea id="rag-input" rows="4" placeholder="Fai la tua domanda sul progetto 'Life is MUSIC'..." class="resize-none"></textarea>
+            <button id="rag-button" class="btn-primary">Chiedi all'AI</button>
+            <div id="rag-response">
+                Le risposte dell'AI appariranno qui...
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white text-center p-8 mt-16">
+        <div class="container mx-auto">
+            <p>&copy; 2025 Life is MUSIC. Tutti i diritti riservati.</p>
+            <p class="mt-2 text-sm">Contattaci: info@lifeismusic.com</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
+                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-instagram text-xl"></i></a>
+                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-youtube text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Chart.js for Revenue Mix
+        const ctx = document.getElementById('revenueMixChart').getContext('2d');
+        const revenueMixChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Biglietteria', 'Sponsorizzazioni', 'Merchandising', 'Eventi Privati'],
+                datasets: [{
+                    data: [50, 30, 10, 10], // Esempio di percentuali
+                    backgroundColor: [
+                        'rgba(255, 215, 0, 0.8)',      // Gold
+                        'rgba(224, 0, 178, 0.8)',    // Magenta
+                        'rgba(74, 144, 226, 0.8)',   // Primary Blue
+                        'rgba(128, 0, 128, 0.8)'     // Purple for private events
+                    ],
+                    borderColor: [
+                        'rgba(255, 215, 0, 1)',
+                        'rgba(224, 0, 178, 1)',
+                        'rgba(74, 144, 226, 1)',
+                        'rgba(128, 0, 128, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#FFFFFF' // White labels for dark background
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Toggle navigation for mobile (if implementing a hamburger menu)
+        // const navToggle = document.getElementById('nav-toggle');
+        // const navMenu = document.getElementById('nav-menu');
+        // if (navToggle) {
+        //     navToggle.addEventListener('click', () => {
+        //         navMenu.classList.toggle('hidden');
+        //     });
+        // }
+
+        // RAG functionality
+        const ragInput = document.getElementById('rag-input');
+        const ragButton = document.getElementById('rag-button');
+        const ragResponseDiv = document.getElementById('rag-response');
+
+        ragButton.addEventListener('click', async () => {
+            const question = ragInput.value;
+            if (!question) {
+                ragResponseDiv.innerHTML = 'Per favore, inserisci una domanda.';
+                ragResponseDiv.classList.remove('has-content');
+                return;
+            }
+
+            ragResponseDiv.innerHTML = 'Ricerca in corso...';
+            ragResponseDiv.classList.remove('has-content'); // Remove content class while loading
+
+            try {
+                // Sostituisci YOUR_NETLIFY_FUNCTION_URL con l'URL effettivo della tua funzione Netlify
+                const response = await fetch('YOUR_NETLIFY_FUNCTION_URL', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: question }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    let sourcesHtml = '';
+                    if (data.sources && data.sources.length > 0) {
+                        sourcesHtml = `
+                            <div class="sources-list">
+                                <h4 class="text-xl font-bold">Fonti trovate:</h4>
+                                <ul>
+                                    ${data.sources.map(source => `<li>${source.file_name} (Similarità: ${source.similarity ? (source.similarity * 100).toFixed(2) + '%' : 'N/A'})</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    } else {
+                        sourcesHtml = '<p class="text-sm text-gray-400 mt-4">Nessuna fonte rilevante trovata nei documenti caricati.</p>';
+                    }
+
+                    ragResponseDiv.innerHTML = `
+                        <p>${data.answer}</p>
+                        ${sourcesHtml}
+                    `;
+                    ragResponseDiv.classList.add('has-content');
+                } else {
+                    ragResponseDiv.innerHTML = `Errore: ${data.error || 'Qualcosa è andato storto.'}`;
+                    ragResponseDiv.classList.remove('has-content');
+                }
+            } catch (error) {
+                console.error('Errore durante la richiesta RAG:', error);
+                ragResponseDiv.innerHTML = 'Errore durante la comunicazione con il server. Riprova più tardi.';
+                ragResponseDiv.classList.remove('has-content');
+            }
+        });
+
+        // Scroll animation logic (if you want to re-enable, add 'animate-on-scroll' class to elements)
+        const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    // Optional: remove 'visible' class when out of view if you want repeat animations
+                    // entry.target.classList.remove('visible'); 
+                }
+            });
+        }, { threshold: 0.1 }); // Adjust threshold as needed
+
+        animateOnScrollElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Logic for accordion arrow rotation
+        document.querySelectorAll('.document-accordion details').forEach((details) => {
+            details.addEventListener('toggle', () => {
+                const icon = details.querySelector('summary i');
+                if (details.open) {
+                    icon.classList.add('fa-chevron-down');
+                    icon.classList.remove('fa-chevron-right');
+                } else {
+                    icon.classList.add('fa-chevron-right');
+                    icon.classList.remove('fa-chevron-down');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

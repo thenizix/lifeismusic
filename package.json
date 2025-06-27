@@ -1,0 +1,26 @@
+{
+  "name": "life-is-music-website",
+  "version": "1.0.0",
+  "description": "Sito web per il progetto 'Life is MUSIC' con funzioni serverless AI.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx netlify dev",
+    "deploy": "npx netlify deploy --prod"
+  },
+  "keywords": [
+    "music",
+    "show",
+    "event",
+    "netlify",
+    "serverless",
+    "ai"
+  ],
+  "author": "Fireflies Light",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+    // In una vera applicazione, potresti aggiungere dipendenze per l'SDK del tuo LLM (es. @google/generative-ai)
+    // o per Firestore (es. firebase-admin) se si gestiscono documenti.
+  }
+}
+

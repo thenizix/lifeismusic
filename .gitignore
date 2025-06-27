@@ -1,0 +1,23 @@
+# Ignora la cartella node_modules
+node_modules/
+
+# Ignora i file delle variabili d'ambiente (contengono chiavi API, ecc.)
+.env
+
+# Ignora le cartelle node_modules all'interno delle funzioni Netlify
+netlify/functions/node_modules/
+
+# Ignora il file package-lock.json all'interno delle funzioni Netlify
+# Questo è utile se le dipendenze delle funzioni sono gestite indipendentemente
+netlify/functions/package-lock.json# Local Netlify folder
+# Ignora le cartelle di dipendenze Node.js
+node_modules/
+netlify/functions/node_modules/
+
+# Ignora i file di lock delle dipendenze (se gestiti da Netlify)
+package-lock.json
+netlify/functions/package-lock.json
+
+# Ignora i file delle variabili d'ambiente (sicurezza!)
+.env
+.env.example

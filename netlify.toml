@@ -1,0 +1,17 @@
+[build]
+  publish = "public" # La cartella dove si trova il tuo index.html
+  functions = "netlify/functions" # La tua cartella delle funzioni Netlify
+
+[functions]
+  node_bundler = "esbuild" # Usa esbuild per build più veloci
+  # timeout = 30 # Aumenta il timeout se le funzioni sono complesse
+
+[[redirects]]
+  from = "/ask-rag"
+  to = "/.netlify/functions/ask-rag"
+  status = 200
+
+[[redirects]]
+  from = "/drive-webhook"
+  to = "/.netlify/functions/drive-webhook"
+  status = 200
