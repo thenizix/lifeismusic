@@ -928,7 +928,7 @@
 
             try {
                 // Sostituisci YOUR_NETLIFY_FUNCTION_URL con l'URL effettivo della tua funzione Netlify
-                const response = await fetch('YOUR_NETLIFY_FUNCTION_URL', { 
+                const response = await fetch('/.netlify/functions/ask-rag', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
