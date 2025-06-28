@@ -4,1001 +4,1231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Life is MUSIC - Il Fenomeno</title>
+    <!-- Tailwind CSS CDN per uno styling rapido e responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts per Bebas Neue e Montserrat, per coerenza con la brand identity -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js per eventuali grafici futuri, già incluso in documenti precedenti -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome per icone, come le frecce negli accordion -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon SVG per un tocco musicale -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎵</text></svg>">
     <style>
+        /* Variabili CSS per colori e font, per facilitare la coerenza tematica */
         :root {
-            --primary-bg-light: #4A90E2; /* Un blu più vivace per lo sfondo principale */
-            --secondary-card-bg: rgba(26, 60, 92, 0.9); /* Un blu scuro più distinto per le card */
-            --gold: #FFD700;
-            --accent-magenta: #E000B2; /* Magenta vibrante */
+            --primary-bg-dark: #001f3f; /* Blu Petrolio Scuro */
+            --secondary-bg-light: #f0f8ff; /* Bianco Alabastro */
+            --accent-gold: #FFD700; /* Giallo Oro */
+            --text-light: #e0e0e0; /* Grigio Chiaro per testo */
+            --text-dark: #333333; /* Grigio Scuro per testo su sfondi chiari */
+            --card-bg: rgba(255, 255, 255, 0.08); /* Sfondo delle card leggermente trasparente */
+            --border-color: rgba(255, 255, 255, 0.15); /* Colore bordo per separazioni */
         }
-        
+
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--primary-bg-light);
-            color: #FFFFFF;
-            position: relative;
-            overflow-x: hidden;
+            background-color: var(--primary-bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            scroll-behavior: smooth; /* Scorrimento fluido per gli anchor link */
         }
-        
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23FFFFFF' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-            opacity: 0.18; /* Increased opacity for more visibility */
-            z-index: -1;
-        }
-        
+
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Bebas Neue', sans-serif;
-            color: var(--gold);
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
         }
-        
-        .text-gold {
-            color: var(--gold);
+
+        /* Stile per i link nel documento */
+        a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
-        
-        .bg-gold {
-            background-color: var(--gold);
+
+        a:hover {
+            color: #ffb700; /* Tonalità più scura per l'hover del colore oro */
         }
-        
-        .text-accent-magenta {
-            color: var(--accent-magenta);
+
+        /* Stili specifici per il layout e i componenti */
+        .container {
+            max-width: 1200px;
         }
-        
-        .bg-accent-magenta {
-            background-color: var(--accent-magenta);
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px); /* Effetto vetro smerigliato */
         }
-        
-        .section-title {
-            position: relative;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 80px;
-            height: 4px;
-            background-color: var(--gold);
-            border-radius: 2px;
-        }
-        
+
+        /* Stili per la barra di navigazione fissa */
         .navbar {
-            background-color: rgba(74, 144, 226, 0.95); /* Semi-trasparente Primary Blue */
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 31, 63, 0.9); /* Versione leggermente trasparente del colore di sfondo primario */
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-        
-        .chart-container {
-            position: relative;
-            height: 400px;
-            width: 100%;
-        }
-        
-        /* Stili per i diagrammi a blocchi/freccia */
-        .diagram-node {
-            background-color: var(--accent-magenta); /* Magenta vibrante */
-            color: #FFFFFF;
-            padding: 1rem 1.5rem;
+
+        .navbar a {
+            padding: 0.75rem 1.25rem;
             border-radius: 0.5rem;
-            text-align: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .navbar a:hover, .navbar a.active {
+            background-color: var(--accent-gold);
+            color: var(--primary-bg-dark); /* Testo scuro su sfondo oro per evidenziare */
+        }
+
+        /* Stili per l'accordion/dettagli */
+        details {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            overflow: hidden; /* Assicura che i bordi arrotondati funzionino correttamente */
+            border: 1px solid var(--border-color);
+        }
+
+        summary {
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            min-width: 150px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: var(--accent-gold);
+            list-style: none; /* Rimuove il triangolino di default */
+            transition: background-color 0.2s ease;
         }
-        
-        .diagram-node:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+
+        summary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
-        
-        .diagram-arrow {
-            color: var(--gold); /* Giallo Oro per le frecce */
-            font-size: 2rem;
+
+        details[open] summary {
+            background-color: rgba(255, 255, 255, 0.12);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        details p {
+            padding: 1rem 1.5rem 1.25rem;
+            color: var(--text-light);
+            animation: fadeIn 0.3s ease-out; /* Animazione per il contenuto che appare */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Icona freccia nell'accordion */
+        summary i {
+            transition: transform 0.2s ease;
+        }
+
+        details[open] summary i {
+            transform: rotate(90deg); /* Ruota la freccia quando l'accordion è aperto */
+        }
+
+        /* Stili per tabelle Markdown */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        /* Stili per la sezione hero */
+        .hero-section {
+            background: linear-gradient(rgba(0, 31, 63, 0.8), rgba(0, 31, 63, 0.8)), url('https://placehold.co/1920x800/001f3f/FFD700?text=Life+is+MUSIC+Background') center center / cover no-repeat;
+            min-height: 70vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-        }
-        
-        .diagram-funnel-layer {
-            background-color: rgba(224, 0, 178, 0.5); /* Magenta Trasparente */
-            color: #FFFFFF;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
             text-align: center;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            overflow: hidden;
+            border-radius: 0 0 1rem 1rem; /* Angoli arrotondati in basso */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
         }
-        
-        .diagram-funnel-layer:hover {
-            transform: scale(1.02);
-        }
-        
-        .diagram-funnel-layer::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -20px; /* Position below the current layer */
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 20px solid var(--gold); /* Giallo Oro arrow pointing down */
-            z-index: 1;
-        }
-        
-        .diagram-funnel-layer:last-child::after {
-            display: none;
-        }
-        
+
         .hero-content {
-            position: relative;
             z-index: 10;
-            animation: fadeInUp 1s ease-out;
-        }
-        
-        .hero-title {
-            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            animation: pulse 2s infinite;
-        }
-        
-        .hero-subtitle {
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-        
-        .btn-primary {
-            background-color: var(--accent-magenta); /* Changed to magenta */
-            color: white;
-            font-weight: bold;
-            padding: 12px 30px;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            border: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            background-color: var(--gold); /* Change to gold on hover */
-            color: black; /* Text to black on gold hover */
-        }
-        
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-        
-        .section-card {
-            background-color: var(--secondary-card-bg); /* Darker blue for cards */
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible border */
-            transition: transform 0.3s ease;
-        }
-        
-        .section-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        th {
-            background-color: var(--accent-magenta); /* Magenta for table headers */
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.08); /* Slightly more visible even row */
-        }
-        
-        tr:hover {
-            background-color: rgba(255, 255, 255, 0.15); /* More noticeable hover */
-        }
-        
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible border */
-        }
-        
-        .music-note {
-            position: absolute;
-            opacity: 0.08; /* More visible */
-            font-size: 3rem;
-            z-index: -1;
-            animation: float 15s infinite ease-in-out;
-            color: var(--gold); /* Gold notes */
-        }
-        /* New Sound wave SVG */
-        .sound-wave {
-            position: absolute;
-            opacity: 0.05; /* Slightly more visible */
-            z-index: -1;
-            animation: wave-float 20s infinite linear;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
         }
 
-        .wave-1 { top: 5%; right: 15%; width: 150px; height: 100px; animation-delay: 0s; }
-        .wave-2 { bottom: 20%; left: 10%; width: 200px; height: 120px; animation-delay: 7s; }
-        .wave-3 { top: 50%; right: 5%; width: 100px; height: 80px; animation-delay: 14s; }
-
-
-        .note-1 { top: 10%; left: 5%; animation-delay: 0s; }
-        .note-2 { top: 25%; right: 10%; animation-delay: 3s; }
-        .note-3 { bottom: 15%; left: 15%; animation-delay: 6s; }
-        .note-4 { bottom: 30%; right: 20%; animation-delay: 9s; }
-        .note-5 { top: 40%; left: 25%; animation-delay: 12s; }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            }
-            50% {
-                transform: scale(1.03);
-                text-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
-            }
-            100% {
-                transform: scale(1);
-                text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            }
-        }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            25% {
-                transform: translateY(-20px) rotate(5deg);
-            }
-            50% {
-                transform: translateY(0) rotate(0deg);
-            }
-            75% {
-                transform: translateY(20px) rotate(-5deg);
-            }
-        }
-
-        @keyframes wave-float {
-            0%, 100% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            25% {
-                transform: translate(10px, -15px) rotate(3deg);
-            }
-            50% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            75% {
-                transform: translate(-10px, 15px) rotate(-3deg);
-            }
-        }
-        
+        /* Animazioni per elementi on scroll */
         .animate-on-scroll {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        
+
         .animate-on-scroll.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
-        .navbar a {
-            position: relative;
-            padding: 5px 0;
+
+        /* Stile specifico per l'Appendice A */
+        .appendix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.03); /* Sfondo leggermente più chiaro per l'appendice */
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .navbar a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
+
+        .appendix-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .appendix-item strong {
+            color: var(--accent-gold);
+        }
+
+        /* Modal styling */
+        .modal {
+            position: fixed;
+            top: 0;
             left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gold);
-            transition: width 0.3s ease;
-        }
-        
-        .navbar a:hover::after {
             width: 100%;
-        }
-
-        /* Document display styles */
-        .document-card {
-            background-color: var(--secondary-card-bg); /* Darker blue for document cards */
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2); /* More visible border */
-        }
-
-        .document-accordion summary {
-            cursor: pointer;
-            padding: 10px 15px;
-            background-color: rgba(0, 0, 0, 0.4); /* Slightly darker for summary header */
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s ease;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            font-weight: 600;
-            color: var(--gold);
-            outline: none; /* Remove outline on focus */
-        }
-        
-        .document-accordion summary:hover {
-            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .document-accordion summary::-webkit-details-marker {
-            display: none; /* Hide default marker */
+        .modal.open {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .document-accordion summary i {
+        .modal-content {
+            background-color: var(--primary-bg-dark);
+            color: var(--text-light);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+            transform: scale(0.95);
             transition: transform 0.3s ease;
         }
 
-        .document-accordion details[open] summary i {
-            transform: rotate(90deg); /* Rotate arrow when open */
+        .modal.open .modal-content {
+            transform: scale(1);
         }
 
-        .document-content {
-            background-color: rgba(0, 0, 0, 0.3); /* Slightly more opaque content background */
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            line-height: 1.6;
-            margin-top: 10px; /* Space between summary and content */
-        }
-
-        .document-content p {
-            margin-bottom: 1em; /* Space between paragraphs */
-        }
-        .document-content strong {
-            color: var(--gold);
-        }
-        /* Specific styles for Project Proposal image for responsive display */
-        .document-content .responsive-img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 1rem auto; /* Center the image */
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4); /* Slightly stronger shadow */
-        }
-        /* Styles for RAG section */
-        #rag-section {
-            padding: 40px;
-            background-color: var(--secondary-card-bg);
-            border-radius: 15px;
-            margin-top: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-        #rag-section h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        #rag-section h2::after {
-            content: '';
+        .close-button {
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 0;
-            width: 80px;
-            height: 4px;
-            background-color: var(--gold);
-            border-radius: 2px;
-        }
-        #rag-input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background-color: rgba(0, 0, 0, 0.3);
-            color: white;
-            margin-bottom: 20px;
-            box-sizing: border-box; /* Include padding in width */
-        }
-        #rag-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        #rag-button {
-            display: block;
-            width: 100%;
-            padding: 12px 20px;
-            background-color: var(--accent-magenta);
-            color: white;
+            top: 1rem;
+            right: 1rem;
+            background: none;
             border: none;
-            border-radius: 8px;
-            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--text-light);
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
         }
-        #rag-button:hover {
-            background-color: var(--gold);
-            color: black;
-            transform: translateY(-2px);
-        }
-        #rag-response {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-style: italic;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        #rag-response.has-content {
-            text-align: left;
-            font-style: normal;
-            color: white;
-            display: block;
-        }
-        #rag-response .sources-list {
-            margin-top: 15px;
-            border-top: 1px dashed rgba(255, 255, 255, 0.3);
-            padding-top: 15px;
-        }
-        #rag-response .sources-list h4 {
-            color: var(--gold);
-            margin-bottom: 10px;
-        }
-        #rag-response .sources-list ul {
-            list-style: disc;
-            padding-left: 20px;
-        }
-        #rag-response .sources-list li {
-            margin-bottom: 5px;
+
+        .close-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
-<body class="leading-relaxed">
-    <div class="music-note note-1">♪</div>
-    <div class="music-note note-2">♫</div>
-    <div class="music-note note-3">♬</div>
-    <div class="music-note note-4">♩</div>
-    <div class="music-note note-5">♪</div>
-
-    <div class="sound-wave wave-1">
-        <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 50C25 20 75 20 90 50C75 80 25 80 10 50Z" stroke="var(--accent-magenta)" stroke-width="2" stroke-opacity="0.5"/>
-            <path d="M15 50C30 25 70 25 85 50C70 75 30 75 15 50Z" stroke="var(--gold)" stroke-width="2" stroke-opacity="0.5"/>
-        </svg>
-    </div>
-    <div class="sound-wave wave-2">
-        <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 40C20 10 80 10 95 40C80 70 20 70 5 40Z" stroke="var(--accent-magenta)" stroke-width="2" stroke-opacity="0.5"/>
-            <path d="M10 40C25 15 75 15 90 40C75 65 25 65 10 40Z" stroke="var(--gold)" stroke-width="2" stroke-opacity="0.5"/>
-        </svg>
-    </div>
-    <div class="sound-wave wave-3">
-        <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 50C15 20 85 20 100 50C85 80 15 80 0 50Z" stroke="var(--accent-magenta)" stroke-width="2" stroke-opacity="0.5"/>
-        </svg>
-    </div>
-
-    <nav class="navbar fixed w-full p-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-yellow-gold flex items-center">
-                <i class="fas fa-music mr-2"></i>Life is MUSIC
-            </a>
-            <div class="space-x-4 flex">
-                <a href="#concept" class="text-white hover:text-yellow-gold transition duration-300">Concept</a>
-                <a href="#artistico" class="text-white hover:text-yellow-gold transition duration-300">Artistico</a>
-                <a href="#partnership" class="text-white hover:text-yellow-gold transition duration-300">Partnership</a>
-                <a href="#strategia" class="text-white hover:text-yellow-gold transition duration-300">Strategia</a>
-                <a href="#roadmap" class="text-white hover:text-yellow-gold transition duration-300">Roadmap</a>
-                <a href="#documentazione" class="text-white hover:text-yellow-gold transition duration-300">Documentazione</a>
-                <a href="#rag-section" class="text-white hover:text-yellow-gold transition duration-300">Chiedi al Doc!</a>
+<body class="font-montserrat">
+    <!-- Barra di navigazione fissa -->
+    <nav class="navbar fixed top-0 left-0 w-full z-50 py-4 shadow-lg">
+        <div class="container mx-auto flex flex-wrap items-center justify-between px-4">
+            <a href="#hero" class="text-2xl font-bebas-neue text-accent-gold tracking-widest">LIFE IS MUSIC</a>
+            <div class="flex-grow flex justify-end">
+                <ul class="flex space-x-4">
+                    <li><a href="#intro" class="hover:text-accent-gold">Introduzione</a></li>
+                    <li><a href="#capitolo1" class="hover:text-accent-gold">Capitolo 1</a></li>
+                    <li><a href="#capitolo2" class="hover:text-accent-gold">Capitolo 2</a></li>
+                    <li><a href="#capitolo3" class="hover:text-accent-gold">Capitolo 3</a></li>
+                    <li><a href="#capitolo4" class="hover:text-accent-gold">Capitolo 4</a></li>
+                    <li><a href="#capitolo5" class="hover:text-accent-gold">Capitolo 5</a></li>
+                    <li><a href="#capitolo6" class="hover:text-accent-gold">Capitolo 6</a></li>
+                    <li><a href="#capitolo7" class="hover:text-accent-gold">Capitolo 7</a></li>
+                    <li><a href="#faq" class="hover:text-accent-gold">FAQ</a></li>
+                    <li><a href="#" id="openAppendixBtn" class="hover:text-accent-gold">Appendice A</a></li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <header class="relative h-screen flex items-center justify-center text-center bg-cover bg-center" style="background-image: linear-gradient(rgba(74, 144, 226, 0.8), rgba(74, 144, 226, 0.9)), url('https://placehold.co/1920x1080/4A90E2/FFD700?text=LIFE%20IS%20MUSIC%20SHOW');">
-        <div class="hero-content p-8 rounded-lg max-w-4xl mx-auto">
-            <h1 class="hero-title text-6xl md:text-8xl font-bold text-yellow-gold mb-6">Life is MUSIC</h1>
-            <p class="hero-subtitle text-white text-xl md:text-2xl mb-8">Un'esperienza musicale travolgente che celebra le più grandi hit dagli anni '70 agli anni 2000, unendo generazioni attraverso ritmi coinvolgenti e performance mozzafiato.</p>
-            <a href="#concept" class="btn-primary inline-block">
-                Scopri lo show <i class="fas fa-arrow-down ml-2"></i>
+    <!-- Sezione Hero -->
+    <section id="hero" class="hero-section text-white flex flex-col items-center justify-center pt-24 pb-12 rounded-b-xl">
+        <div class="hero-content text-center animate-on-scroll">
+            <h1 class="text-6xl md:text-8xl font-bold mb-4">LIFE IS MUSIC</h1>
+            <p class="text-xl md:text-2xl italic font-light max-w-2xl mx-auto">
+                Un'esperienza immersiva che celebra la vita, il ritmo e l'energia indomita dagli anni '70 al 2000.
+            </p>
+            <a href="#intro" class="mt-8 inline-block bg-accent-gold text-primary-bg-dark font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 transition-all duration-300 transform hover:scale-105">
+                Esplora il Piano Strategico
             </a>
-            
-            <div class="stats-grid mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
-                    <div class="text-yellow-gold mb-2"><i class="fas fa-users text-4xl"></i></div>
-                    <div class="stat-value text-3xl font-bold">18</div>
-                    <div class="stat-label text-sm">Artisti sul palco</div>
-                </div>
-                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
-                    <div class="text-yellow-gold mb-2"><i class="fas fa-music text-4xl"></i></div>
-                    <div class="stat-value text-3xl font-bold">40+</div>
-                    <div class="stat-label text-sm">Successi musicali</div>
-                </div>
-                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
-                    <div class="text-yellow-gold mb-2"><i class="fas fa-clock text-4xl"></i></div>
-                    <div class="stat-value text-3xl font-bold">165'</div>
-                    <div class="stat-label text-sm">Durata dello show</div>
-                </div>
-                <div class="stat-card animate-on-scroll bg-transparent border border-yellow-gold rounded-lg p-4">
-                    <div class="text-yellow-gold mb-2"><i class="fas fa-calendar-alt text-4xl"></i></div>
-                    <div class="stat-value text-3xl font-bold">2025</div>
-                    <div class="stat-label text-sm">Anno di debutto</div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <section id="youtube-playlist" class="mb-16">
-        <div class="section-card animate-on-scroll text-center">
-            <h2 class="section-title text-4xl mb-8 mx-auto inline-block">Lasciati Ispirare dalla Musica!</h2>
-            <p class="text-lg mb-8">Ascolta la playlist ufficiale che ha ispirato lo show "Life is MUSIC" e immergiti nelle sonorità che ti faranno ballare e sognare.</p>
-            <div class="flex justify-center items-center">
-                <iframe class="rounded-lg shadow-xl w-full max-w-2xl aspect-video" src="https://www.youtube.com/embed/videoseries?list=PL3B8bEPeCDHHD1lY9xfXxCJ-WWYHOzbbc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <p class="text-sm text-gray-400 mt-4">Playlist curata per farti vivere l'energia di "Life is MUSIC".</p>
         </div>
     </section>
 
-    <main class="container mx-auto px-4 lg:px-12 py-16 mt-12">
-        <section id="concept" class="mb-16">
-            <div class="section-card animate-on-scroll">
-                <h2 class="section-title text-4xl mb-8">1.0. Executive Summary: Visione, Prodotto, Mercato</h2>
-                <p class="text-lg mb-6">"Life is MUSIC" è un prodotto di intrattenimento musicale dal vivo, concepito per intercettare un target demografico specifico (25-55 anni) con alta capacità di spesa e forte propensione alla nostalgia. A differenza di cover band o tributi generici, il nostro è uno show-experience: un evento di 2 ore e 45 minuti (inclusivo di intervallo) che unisce l'eccellenza musicale di una band di 11 elementi, la potenza vocale di 4 performer e l'impatto visivo di 6 ballerini professionisti.</p>
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Il Prodotto</h3>
-                <p class="text-lg mb-6">Uno spettacolo modulare, scalabile, adatto a teatri (come il Teatro Cartiera Carrara), arene estive e eventi corporate di alto profilo. La scaletta, scientificamente costruita su hit ad alto BPM e impatto emotivo, garantisce il massimo coinvolgimento del pubblico.</p>
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">La Sfida e la Soluzione</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">La Sfida:</h4>
-                        <p class="text-lg">L'assenza di capitale iniziale.</p>
-                    </div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">La Soluzione:</h4>
-                        <p class="text-lg">Un modello di business a "equity for talent" che trasforma il cast in partner, e una strategia di marketing "Reverse Hype" che genera domanda organica prima di investire in pubblicità tradizionale, minimizzando i rischi e massimizzando l'appeal per investitori e promoter.</p>
-                    </div>
-                </div>
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Ecosistema del Progetto</h3>
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg flex flex-wrap items-center justify-center gap-4 md:flex-nowrap md:gap-8" style="background-color: rgba(0, 0, 0, 0.3);">
-                    <div class="diagram-node">TALENTO (Cast)</div>
-                    <div class="diagram-arrow">→</div>
-                    <div class="diagram-node">PRODOTTO (Show)</div>
-                    <div class="diagram-arrow">→</div>
-                    <div class="diagram-node">FENOMENO MEDIATICO</div>
-                    <div class="diagram-arrow">→</div>
-                    <div class="diagram-node">PROFITTO</div>
-                    <div class="diagram-arrow">→</div>
-                    <div class="diagram-node">Reinvestimento</div>
-                </div>
-                <p class="text-sm text-gray-400 mt-2 text-center">Diagramma a flusso che mostra il ciclo virtuoso del progetto.</p>
+    <!-- Contenuto Principale -->
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+
+        <!-- Introduzione -->
+        <section id="intro" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">INTRODUZIONE: La Visione di "Life is MUSIC"</h2>
+            <p class="mb-4">
+                "Life is MUSIC" rappresenta un'iniziativa ambiziosa nel panorama dell'intrattenimento musicale dal vivo. Concepito come un'esperienza immersiva che trascende il concetto tradizionale di concerto o tributo, lo show celebra l'essenza della musica e della danza dagli anni '70 ai primi anni 2000. Il progetto mira a creare un fenomeno commerciale/culturale capace di connettere generazioni diverse attraverso la capacità di penetrazione di un patrimonio musicale intramontabile, reinterpretato con professionalità.
+            </p>
+            <p>
+                Questo documento funge da piano strategico consolidato, frutto dell'analisi e della riorganizzazione di molto lavoro. L'obiettivo è fornire una visione chiara, coerente e professionale del progetto, delineando gli aspetti artistici, di business, di marketing e operativi in modo strutturato e logico, che rispecchi la serietà e il potenziale di "Life is MUSIC".
+            </p>
+        </section>
+
+        <!-- Capitolo 1 -->
+        <section id="capitolo1" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">CAPITOLO 1: Il Concept Strategico e l'Architettura dello Show</h2>
+
+            <h3 class="text-3xl font-bold mb-4">1.1 Executive Summary: Visione, Prodotto e Mercato</h3>
+            <p class="mb-4">
+                "Life is MUSIC" è un innovativo prodotto di intrattenimento musicale dal vivo, ideato per coinvolgere un pubblico ampio e trasversale, con un focus sul target demografico **25-55** anni, caratterizzato da propensione alla nostalgia e capacità di spesa. Si distingue dalle generiche cover band o tributi come una vera e propria **show-experience**: un evento (da rivedere) articolato di 2 ore e 45 minuti (inclusivo di intervallo) che combina l'eccellenza musicale di una band dal vivo di 11 elementi, la potenza vocale di 4 performer e l'impatto visivo di 6 ballerini professionisti.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">Il Prodotto</h4>
+            <p class="mb-4">
+                Lo spettacolo è intrinsecamente modulare e scalabile, rendendolo ideale per diverse tipologie di location e contesti: dai teatri tradizionali (come il Teatro Cartiere Carrara o il Teatro Puccini a Firenze) alle arene estive e agli eventi corporate di alto profilo. La scaletta è elaborata, selezionando hit con alto BPM e forte impatto emotivo, perseguendo un coinvolgimento dinamico e continuo del pubblico. La **direzione dello spettacolo è intrinsecamente creativa e innovativa**, non si limita a suonare e ballare, ma costruisce un'esperienza narrativa e visiva completa, sfruttando elementi scenici, luci e interazione per un impatto totale.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">La Sfida e la Soluzione Innovativa</h4>
+            <p class="mb-4">
+                Il progetto nasce con una sfida strutturale: l'assenza di un capitale iniziale significativo. Questa apparente limitazione si trasforma in un elemento distintivo e strategico:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**La Sfida:** Mancanza di un budget di partenza per investimenti massivi.</li>
+                <li>**La Soluzione:** Un modello di business basato sull'**"equity for talent"**. Questo approccio trasforma il cast artistico da semplici collaboratori a veri e propri partner del progetto, condividendone successi e rischi. Parallelamente, una strategia di marketing non convenzionale, denominata **"Reverse Hype"**, mira a generare una domanda organica e un "ronzio" mediatico ancor prima di investire in campagne pubblicitarie tradizionali. Questi pilastri minimizzano il rischio finanziario iniziale e massimizzano l'attrattiva per potenziali investitori e promoter.</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">Ecosistema del Progetto: Un Ciclo Virtuoso</h4>
+            <p class="mb-4">
+                Il funzionamento di "Life is MUSIC" può essere visualizzato come un ciclo virtuoso e autoalimentante:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**TALENTO (Cast):** Gli artisti, scelti per la loro eccellenza e mentalità imprenditoriale, sono il motore creativo.</li>
+                <li>**PRODOTTO (Show):** Il loro talento si concretizza in uno spettacolo di alta qualità e impatto.</li>
+                <li>**FENOMENO MEDIATICO (Marketing):** Lo show, amplificato da una strategia di "Reverse Hype" e contenuti virali, genera un forte richiamo e interesse.</li>
+                <li>**PROFITTO (Biglietti/Ingaggi):** L'attrattiva mediatica si traduce in vendita di biglietti e ingaggi remunerativi.</li>
+                <li>**Reinvestimento:** I profitti generati vengono parzialmente reinvestiti nel miglioramento continuo del Talento e del Prodotto, alimentando ulteriormente il ciclo e garantendo la sostenibilità e la crescita del progetto.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">1.2 La Costruzione Artistica: Architettura di uno Show ad Alta Energia</h3>
+            <p class="mb-4">
+                La scaletta di "Life is MUSIC" non è una semplice aggregazione di brani, ma una sequenza attentamente studiata, pensata come un'**arma di ingegneria emotiva**. L'obiettivo è creare un'esperienza implacabile, che catturi e mantenga l'energia del pubblico dal primo all'ultimo minuto.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">1.2.1 Analisi di Durata e Metrica</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Durata Totale dello Show:** 2 ore e 45 minuti (165 minuti).</li>
+                <li>**Intervallo:** 20 minuti.</li>
+                <li>**Tempo di Musica Effettiva:** 145 minuti.</li>
+                <li>**Metrica dei Brani:** Un brano dance/pop ha una durata media di 3.5 - 4 minuti. Per massimizzare il numero di hit e mantenere l'energia, verranno utilizzati **medley strategici** e **transizioni musicali fluide ("segue")** che eliminano le pause tra un pezzo e l'altro.</li>
+                <li>**Target Brani:** La scaletta comprenderà circa **35-40 canzoni**, tra esecuzioni complete e sezioni integrate in medley.</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">1.2.2 La Curva Energetica: Struttura Emotiva dello Show</h4>
+            <p class="mb-4">
+                Lo spettacolo è progettato per seguire una **curva di energia a "doppia onda"**, ottimizzata per massimizzare l'engagement e creare un'esperienza emotiva intensa:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Atto 1: "Ignition & Fever" (Accensione e Febbre)**
+                    Un crescendo inarrestabile che evolve dal funk elegante alla travolgente febbre della disco music, culminando in un picco di pura energia rock prima dell'intervallo. L'obiettivo è un avvio potente e un'ascesa continua dell'intensità.</li>
+                <li>**Atto 2: "Electric Dreams & Human Heart" (Sogni Elettrici e Cuore Umano)**
+                    Una ripartenza energica con l'elettronica pop degli anni '80, seguita da un'esplorazione delle power ballad più iconiche e degli inni pop anni '90, fino a un gran finale corale che mira a lasciare il pubblico senza fiato e con il desiderio di un encore.</li>
+            </ul>
+            <p class="mb-4">
+                Questa struttura dinamica assicura che il pubblico sia costantemente coinvolto, attraverso variazioni di ritmo e intensità emotiva che culminano in momenti di grande impatto collettivo.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">1.2.3 Scaletta Strategica Definitiva (BPM > 115): Una Proposta Basata sui Dati</h4>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th>Slot</th>
+                            <th>Brano / Medley</th>
+                            <th>Artista Originale</th>
+                            <th>BPM (circa)</th>
+                            <th>Funzione nello Show</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" class="font-bold text-accent-gold">ATTO 1</td></tr>
+                        <tr><td>Opening</td><td>Medley: "Cosmic Girl" → "September"</td><td>Jamiroquai / EWF</td><td>120</td><td>**Ignition:** Apertura di classe, groove immediato. Band e Ballerini.</td></tr>
+                        <tr><td>Sez. Funk</td><td>"Get Lucky"</td><td>Daft Punk ft. Pharrell</td><td>116</td><td>**Modern-Classic:** Connette il mood '70 con un sound contemporaneo.</td></tr>
+                        <tr><td>Voce F1</td><td>"I'm Every Woman"</td><td>Chaka Khan</td><td>115</td><td>**Power Anthem:** Primo showcase vocale femminile. Energia pura.</td></tr>
+                        <tr><td>Voce M1</td><td>"Can't Stop the Feeling!"</td><td>Justin Timberlake</td><td>113</td><td>**Feel-Good Moment:** Coinvolgimento totale del pubblico.</td></tr>
+                        <tr><td>Assalto Disco</td><td>Medley: "Le Freak" / "Good Times" / "Stayin' Alive"</td><td>Chic / Bee Gees</td><td>120-125</td><td>**Dancefloor Peak:** Focus su coreografie e sezione fiati. Inarrestabile.</td></tr>
+                        <tr><td>Voce F2</td><td>"It's Raining Men"</td><td>The Weather Girls</td><td>136</td><td>**High-Camp Energy:** Esplosivo, divertente e iconico.</td></tr>
+                        <tr><td>Voce M2</td><td>"Billie Jean"</td><td>Michael Jackson</td><td>117</td><td>**Iconic Coolness:** Momento di stile con coreografia leggendaria.</td></tr>
+                        <tr><td>Duetto M/F</td><td>"Don't Go Breaking My Heart"</td><td>Elton John & Kiki Dee</td><td>132</td><td>**Interazione Ludica:** Leggerezza prima della chiusura.</td></tr>
+                        <tr><td>Finale A1</td><td>Medley: "Footloose" → "Don't Stop Me Now"</td><td>Kenny Loggins / Queen</td><td>174 / 150</td><td>**Maximum Overdrive:** Chiusura adrenalinica che lascia il pubblico in piedi.</td></tr>
+                        <tr><td colspan="5" class="font-bold text-accent-gold">INTERVALLO</td></tr>
+                        <tr><td colspan="5" class="font-bold text-accent-gold">ATTO 2</td></tr>
+                        <tr><td>Re-Intro</td><td>Intro Synth → "Take On Me"</td><td>a-ha</td><td>169</td><td>**Electric Dream:** Riapertura 80s, impatto visivo e sonoro immediato.</td></tr>
+                        <tr><td>Voce F1/F2</td><td>Medley Girl Power: "Wannabe" / "Vogue"</td><td>Spice Girls / Madonna</td><td>110 / 116</td><td>**Pop Culture:** Coreografie iconiche, armonie vocali.</td></tr>
+                        <tr><td>Voce M1/M2</td><td>"Moves Like Jagger"</td><td>Maroon 5 ft. C. Aguilera</td><td>128</td><td>**Modern Swagger:** Energia rock/pop contemporanea.</td></tr>
+                        <tr><td>Power Ballad</td><td>"I Will Always Love You" (vers. Whitney)</td><td>Whitney Houston</td><td>67-134</td><td>**Emotional Core:** L'unica vera ballad. Un pugno nello stomaco. Silenzio e poi esplosione.</td></tr>
+                        <tr><td>R&B/Pop</td><td>Medley: "Crazy in Love" / "Uptown Funk"</td><td>Beyoncé / M. Ronson & B. Mars</td><td>100 / 115</td><td>**The Groove is Back:** Ritorno all'energia, sezione fiati protagonista.</td></tr>
+                        <tr><td>90s Dance</td><td>Medley: "Rhythm Is a Dancer" / "What Is Love"</td><td>Snap! / Haddaway</td><td>124 / 124</td><td>**Euforia Anni '90:** Momento puramente dance, luci strobo.</td></tr>
+                        <tr><td>Gran Finale</td><td>"I Gotta Feeling"</td><td>Black Eyed Peas</td><td>128</td><td>**Inno Collettivo:** Messaggio di unità e celebrazione. Tutti sul palco.</td></tr>
+                        <tr><td>Encore 1</td><td>"I Will Survive"</td><td>Gloria Gaynor</td><td>125</td><td>**Resilienza e Festa:** Il pubblico canta ogni parola. Catarsi.</td></tr>
+                        <tr><td>Encore 2</td><td>"Shake Your Body (Down to the Ground)"</td><td>The Jacksons</td><td>122</td><td>**Chiusura Funk:** Si finisce ballando, sudando, sorridendo.</td></tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
-        <section class="mb-16">
-            <h2 class="section-title text-4xl mb-8 text-center">Perché Life is MUSIC</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="feature-card animate-on-scroll section-card">
-                    <div class="text-yellow-gold mb-2"><i class="fas fa-star text-4xl"></i></div>
-                    <h3 class="text-gold text-xl font-bold mb-3">Performance Unica</h3>
-                    <p class="text-white">Uno show di alta qualità con 18 artisti sul palco, coreografie mozzafiato e arrangiamenti musicali innovativi.</p>
-                </div>
-                <div class="feature-card animate-on-scroll section-card">
-                    <div class="text-yellow-gold mb-2"><i class="fas fa-users text-4xl"></i></div>
-                    <h3 class="text-gold text-xl font-bold mb-3">Modello Innovativo</h3>
-                    <p class="text-white">Partnership con i talenti attraverso un modello "equity for talent" che crea un team coeso e motivato.</p>
-                </div>
-                <div class="feature-card animate-on-scroll section-card">
-                    <div class="text-yellow-gold mb-2"><i class="fas fa-bullhorn text-4xl"></i></div>
-                    <h3 class="text-gold text-xl font-bold mb-3">Marketing Efficace</h3>
-                    <p class="text-white">Strategia "Reverse Hype" che costruisce aspettativa e coinvolgimento prima del debutto.</p>
-                </div>
+        <!-- Capitolo 2 -->
+        <section id="capitolo2" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">CAPITOLO 2: Il Modello di Partnership "Equity for Talent"</h2>
+
+            <h3 class="text-3xl font-bold mb-4">2.1 La Filosofia "Equity for Talent"</h3>
+            <p class="mb-4">
+                L'assenza di un budget iniziale per ingaggi tradizionali non è percepita come una debolezza, bensì come un **filtro strategico**. Questa condizione permette di attrarre e selezionare esclusivamente artisti-imprenditori: individui che non sono semplicemente "mercenari" in cerca di un cachet immediato, ma che credono profondamente nel potenziale a lungo termine del progetto. La proposta di "Life is MUSIC" non è quindi un'offerta di "lavoro" convenzionale, ma un **invito a una partnership** autentica, dove il successo collettivo è l'obiettivo condiviso.
+            </p>
+
+            <h3 class="text-3xl font-bold mb-4">2.2 Il Quadro Legale: Contratto di Associazione in Partecipazione (Art. 2549 c.c.)</h3>
+            <p class="mb-4">
+                La collaborazione tra la produzione e il cast artistico è formalizzata attraverso il **Contratto di Associazione in Partecipazione**, disciplinato dall'Art. 2549 del Codice Civile italiano. Questo strumento legale definisce un rapporto trasparente e solido, ideale per progetti in fase di startup.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Ruoli:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Artista (Associato):** Apporta la propria opera, talento, e dedizione al progetto.</li>
+                        <li>**Produzione (Associante):** Apporta la struttura organizzativa, la direzione strategica, la gestione commerciale e le risorse per lo sviluppo.</li>
+                    </ul>
+                </li>
+                <li>**Finalità:** La formalizzazione tramite questo contratto assicura una divisione degli utili chiara e predefinita, rendendo il modello intrinsecamente meritocratico e legalmente tutelato.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">2.3 Struttura delle Quote e Proiezioni di Guadagno Dettagliate</h3>
+            <p class="mb-4">
+                Il modello finanziario di "Life is MUSIC" si basa su una **trasparenza radicale** riguardo la ripartizione degli utili generati da ogni data o evento.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">Calcolo dell'Utile Lordo:</h4>
+            <p class="mb-4">
+                Il processo di calcolo è diretto:
+            </p>
+            <ol class="list-decimal list-inside ml-4 mb-4">
+                <li>**Ricavo Lordo:** L'ammontare totale pagato dal promoter o generato per data/evento.</li>
+                <li>**Meno: Costi Vivi Documentati:** Spese dirette e dimostrabili legate all'evento (es. service audio/luci, trasporti, SIAE, alloggi, ecc.).</li>
+                <li>**Uguale: Utile Lordo:** La differenza tra Ricavo Lordo e Costi Vivi.</li>
+            </ol>
+            <h4 class="text-2xl font-bold mb-3">Divisione dell'Utile Lordo:</h4>
+            <p class="mb-4">
+                L'Utile Lordo viene ripartito secondo percentuali fisse:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**25% alla Produzione:** Questa quota è destinata a coprire i costi di gestione generali del progetto, le spese di marketing e sviluppo continue, e la creazione di un fondo di cassa strategico per futuri investimenti e crescita strutturale.</li>
+                <li>**75% al Monte Ingaggi Artistico:** Questa porzione dell'utile è interamente dedicata alla remunerazione del cast artistico, suddivisa ulteriormente in base a un sistema di quote predefinite.</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">Tabella di Ripartizione Quote (Totale 30 quote):</h4>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th>Ruolo</th>
+                            <th>N. Artisti</th>
+                            <th>Quote per Artista</th>
+                            <th>Totale Quote</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Cantanti</td><td>4</td><td>2.0</td><td>8.0</td></tr>
+                        <tr><td>Coreografa/Ballerina</td><td>1</td><td>2.0</td><td>2.0</td></tr>
+                        <tr><td>Ballerini</td><td>5</td><td>1.5</td><td>7.5</td></tr>
+                        <tr><td>Direttore Musicale/Band Leader</td><td>1</td><td>2.0</td><td>2.0</td></tr>
+                        <tr><td>Musicisti (Sezione Ritmica/Tastiere)</td><td>3</td><td>1.5</td><td>4.5</td></tr>
+                        <tr><td>Musicisti (Sezione Fiati)</td><td>4</td><td>1.5</td><td>6.0</td></tr>
+                        <tr><td>**TOTALE**</td><td>**18**</td><td></td><td>**30.0**</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 class="text-2xl font-bold mb-3">2.3.1 La Remunerazione del Team di Produzione e Fondatori</h4>
+            <p class="mb-4">
+                Il modello di "Life is MUSIC" riconosce il contributo multidimensionale dei suoi fondatori, che non sono solo figure strategiche e di gestione, ma anche investitori attivi nel progetto. **I due co-fondatori operano con pari oneri e beneficiano di pari remunerazione** per tutte le attività legate alla produzione e allo sviluppo del business, riflettendo il loro impegno equo e il rischio condiviso. La loro compensazione si articola attraverso due canali distinti ma complementari, garantendo piena trasparenza e chiarezza sul valore di ogni ruolo.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Il Fondatore con Ruolo Artistico e Co-Produzione:**
+                    <p class="mt-2">Questa figura è un membro attivo della band, contribuendo direttamente alla performance sul palco. Per questo apporto artistico, la sua remunerazione avviene attraverso il **Monte Ingaggi Artistico (75% dell'utile lordo)**, ricevendo quote come gli altri musicisti in base al suo ruolo specifico (es. categoria "Musicisti" con 1.5 quote o altre quote per ruoli di direzione/arrangiamento).</p>
+                    <p class="mt-2">In parallelo, come co-fondatore, questa persona svolge un ruolo cruciale nelle **attività di produzione e gestione**, inclusi l'organizzazione, le relazioni pubbliche, la creazione di grafica e la gestione della presenza web, oltre ad altre funzioni operative e di sviluppo. Il compenso per questi contributi strategici e operativi deriva dalla **Quota Produzione (25% dell'utile lordo)**, ed è ripartito equamente con l'altro co-fondatore. Questo assicura il riconoscimento sia del talento artistico che dell'indispensabile impegno imprenditoriale.</p>
+                </li>
+                <li>**Il Fondatore con Abilità Imprenditoriali e di Gestione (L'Entità Principale di Produzione):**
+                    <p class="mt-2">Questa figura si concentra sulle leve strategiche e operative del progetto. La sua remunerazione deriva interamente dalla **Quota Produzione (25% dell'utile lordo)**, ripartita equamente con l'altro co-fondatore. Questa percentuale non è un mero costo, ma rappresenta il **compenso diretto per l'investimento iniziale e continuativo** (sia finanziario che di tempo e risorse intellettuali), nonché per l'assunzione del rischio primario del progetto. Le attività coperte da questa quota includono:</p>
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Direzione Strategica e Sviluppo del Business:** La definizione della visione, la pianificazione a lungo termine, la ricerca e l'apertura di nuove opportunità commerciali.</li>
+                        <li>**Procacciamento Ingaggi e Relazioni Pubbliche:** L'attività proattiva di networking con promoter e sponsor, la negoziazione di accordi e la costruzione e gestione dell'immagine del brand.</li>
+                        <li>**Gestione Amministrativa e Operativa:** Tutte le funzioni essenziali per il funzionamento della macchina produttiva, inclusa la piena facoltà e responsabilità di **assumere e licenziare** il personale, a garanzia della qualità e coesione del team artistico e di produzione.</li>
+                        <li>**Assunzione del Rischio:** In quanto custodi del marchio e investitori diretti, i fondatori sono i primi a sostenere il rischio d'impresa. La quota del 25% compensa questo fondamentale onere e gli sforzi manageriali che guidano il progetto verso il successo, con una distribuzione equa tra i due.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="mb-4">
+                Questo modello di remunerazione è strutturato per offrire una chiara distinzione tra il contributo artistico (premiato dal 75% del monte ingaggi) e il lavoro di gestione, sviluppo e assunzione del rischio (premiato dal 25% della quota di produzione). La **totale parità di oneri e remunerazione tra i due co-fondatori nella gestione della produzione** è un principio fondamentale che mira a fornire a tutti i membri del team una comprensione approfondita del valore e del rischio associato alla guida del progetto, rafforzando un senso di equità e un obiettivo comune e condiviso.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">Esempio di Proiezione di Guadagno (una singola data):</h4>
+            <p class="mb-4">
+                Per illustrare il funzionamento pratico del modello, consideriamo una proiezione basata su un cachet medio:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Cachet pagato dal promoter:** €12.000</li>
+                <li>**Meno: Costi vivi (service, viaggi):** - €4.000</li>
+                <li>**Utile Lordo:** €8.000</li>
+                <li>**Quota Produzione (25% di €8.000):** €2.000
+                    <p class="ml-4 italic mt-1">*(Questa quota viene utilizzata per coprire le spese operative della produzione e remunerare l'investimento e il lavoro gestionale/imprenditoriale dei fondatori, **equamente divisi tra i due co-fondatori**.)*</p>
+                </li>
+                <li>**Monte Ingaggi Artistico (75% di €8.000):** €6.000</li>
+                <li>**Valore di 1 quota:** €6.000 / 30 quote = **€200 per quota**</li>
+                <li>**Compenso Cantante (2 quote):** €400</li>
+                <li>**Compenso Ballerino (1.5 quote):** €300</li>
+            </ul>
+            <p class="mb-4">
+                Questo sistema non solo incentiva il massimo impegno da parte di tutti i membri del cast, ma allinea intrinsecamente gli interessi di ogni performer con il successo complessivo dello show, trasformando l'eccellenza artistica in un vantaggio economico tangibile per tutti.
+            </p>
+
+            <h3 class="text-3xl font-bold mb-4">2.4 Lettera d'Intenti (Template Operativo)</h3>
+            <p class="mb-4">
+                La **Lettera d'Intenti** è un documento preliminare al contratto formale di Associazione in Partecipazione. Il suo scopo è bloccare l'impegno del cast in modo chiaro e trasparente fin dalle prime fasi, comunicando il modello di collaborazione e le aspettative reciproche. Serve a consolidare l'accordo verbale in attesa della formalizzazione contrattuale completa, garantendo che tutti i futuri partner siano allineati sulla visione e sulla struttura di "Equity for Talent".
+            </p>
+            <p class="mb-4">
+                A tal fine, un <a href="https://www.google.com/search?q=link_al_template_artista.pdf" target="_blank" class="font-semibold">Template di Lettera d'Intenti per Artisti <i class="fas fa-external-link-alt text-sm"></i></a> sarà reso disponibile per facilitare e standardizzare questo processo. Per future collaborazioni con sponsor e partner commerciali, saranno sviluppati e collegati qui <a href="https://www.google.com/search?q=link_al_template_sponsor.pdf" target="_blank" class="font-semibold">Template di Contratto di Sponsorizzazione <i class="fas fa-external-link-alt text-sm"></i></a> e <a href="https://www.google.com/search?q=link_al_template_accordo.pdf" target="_blank" class="font-semibold">Template di Accordo Commerciale <i class="fas fa-external-link-alt text-sm"></i></a>.
+            </p>
+            <p>
+                Questo capitolo evidenzia come "Life is MUSIC" abbia trasformato una potenziale debolezza (assenza di capitale iniziale) in una strategia innovativa e motivante per costruire un team di alto livello intrinsecamente legato al successo del progetto.
+            </p>
+        </section>
+
+        <!-- Capitolo 3 -->
+        <section id="capitolo3" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">CAPITOLO 3: Casting Strategico e Sviluppo del Talento Artistico</h2>
+
+            <h3 class="text-3xl font-bold mb-4">3.1 Un Approccio Chirurgico al Reclutamento del Talento</h3>
+            <p class="mb-4">
+                Il processo di casting di "Life is MUSIC" non è una "chiamata alle armi" indiscriminata, ma un'operazione mirata e strategica. Non si cercano unicamente artisti tecnicamente validi, ma **autentici ambasciatori del progetto**: individui dotati di talento eccezionale, carisma scenico, una spiccata mentalità imprenditoriale e una forte e riconoscibile presenza scenica. L'obiettivo è evitare annunci di massa che generano un'eccessiva quantità di candidature non qualificate, privilegiando un approccio qualitativo.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">3.1.1 Canali di Reclutamento Mirati</h4>
+            <p class="mb-4">
+                Per identificare i profili ideali, si prediligono canali che permettano una selezione più raffinata e diretta:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Network dei Professionisti:** Il primo e più efficace cerchio di reclutamento è costituito dalla rete personale dei co-fondatori e dei collaboratori fidati. Ogni professionista consolidato nel settore conosce altri professionisti, consentendo un passaparola qualificato basato su reputazione e referenze dirette.</li>
+                <li>**Piattaforme Professionali Selezionate:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Villaggio Musicale, Lavorare Nello Spettacolo:** L'utilizzo di queste piattaforme avviene non con annunci generici, ma con inserzioni "premium" che trasmettano un senso di esclusività e un'opportunità di carriera avanzata, non una semplice offerta di lavoro.</li>
+                        <li>**LinkedIn:** Ricerca mirata di profili con tag pertinenti come "performer", "cantante live", "ballerino professionista". L'analisi dei loro showreel e delle esperienze pregresse permette un contatto diretto e professionale, spesso più efficace di un annuncio pubblico.</li>
+                    </ul>
+                </li>
+                <li>**Social Media (Scouting Attivo):** Il team di produzione dedica risorse allo scouting attivo su piattaforme visive come Instagram e TikTok. Si cercano artisti che già producono contenuti di alta qualità, dimostrando proattività, capacità di self-branding e un'autentica presenza scenica digitale.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">3.2 Qualità Distintive Ricercate nel Talento</h3>
+            <p class="mb-4">
+                Oltre alle competenze tecniche e artistiche (voce, ballo, strumentazione), "Life is MUSIC" cerca nel suo cast:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Mentalità Imprenditoriale:** La capacità di comprendere e abbracciare il modello "Equity for Talent", vedendo il progetto come una partnership a lungo termine in cui il proprio impegno contribuisce direttamente al successo condiviso.</li>
+                <li>**Carisma e Presenza Scenica:** Artisti che siano in grado di dominare il palco, di connettersi emotivamente con il pubblico e di trasmettere l'energia dello show.</li>
+                <li>**Professionalità e Affidabilità:** Essenziali per la gestione di tour e spettacoli complessi.</li>
+                <li>**Adattabilità e Collaborazione:** La capacità di lavorare in un grande ensemble, con flessibilità e spirito di squadra.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">3.3 Il Percorso di Sviluppo e Integrazione del Talento</h3>
+            <p class="mb-4">
+                Una volta selezionato, il talento non viene semplicemente "ingaggiato", ma avviato a un percorso di integrazione e sviluppo continuo:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Onboarding e Allineamento:** Sessioni dedicate per approfondire la visione del progetto, il modello di business, la curva energetica dello show e le aspettative reciproche.</li>
+                <li>**Prove e Armonizzazione:** Un periodo intensivo di prove per garantire la perfetta sincronia artistica tra cantanti, ballerini e band, e per affinare l'interpretazione dei brani.</li>
+                <li>**Formazione sulla "Reverse Hype":** Educazione sui principi della strategia di marketing, incoraggiando gli artisti a diventare parte attiva della generazione di contenuti virali e del "ronzio" mediatico.</li>
+            </ul>
+            <p>
+                Questo approccio al casting e allo sviluppo del talento assicura che il team non sia solo un insieme di artisti, ma un corpo coeso e motivato, pronto a incarnare e amplificare il messaggio di "Life is MUSIC".
+            </p>
+        </section>
+
+        <!-- Capitolo 4 -->
+        <section id="capitolo4" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">CAPITOLO 4: Strategia di Marketing "Reverse Hype" e Creazione del Fenomeno</h2>
+
+            <h3 class="text-3xl font-bold mb-4">4.1 I Principi della "Reverse Hype"</h3>
+            <p class="mb-4">
+                La "Reverse Hype" è una strategia che capovolge il tradizionale modello promozionale. Invece di investire massicciamente in pubblicità pre-lancio, si costruisce il desiderio e la curiosità attraverso:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Mistero e Esclusività:** Rilascio di informazioni a goccia, creazione di un senso di "qualcosa di grande sta arrivando" senza svelare subito tutti i dettagli.</li>
+                <li>**Qualità del Contenuto:** Ogni elemento rilasciato (video teaser, foto, piccole performance) deve essere di altissima qualità, a prova di hype.</li>
+                <li>**Partecipazione del Pubblico:** Coinvolgimento della community attraverso indizi, sfide e inviti a "far parte" del fenomeno.</li>
+                <li>**Passaparola Organico:** Incoraggiare il pubblico e gli influencer a diventare i principali veicoli del messaggio.</li>
+            </ul>
+            <p class="mb-4">
+                L'esempio di Beyoncé con il lancio a sorpresa di "Lemonade" e "Cowboy Carter" (basato su dati social per ottimizzare le campagne) è una potente ispirazione per questa strategia: la qualità e l'elemento sorpresa creano un'onda inarrestabile.
+            </p>
+
+            <h3 class="text-3xl font-bold mb-4">4.2 Azioni Virali e Contenuti Strategici</h3>
+            <p class="mb-4">
+                Per alimentare la "Reverse Hype", verranno implementate azioni mirate e contenuti specifici, ideali per la diffusione sui social media e la generazione di engagement.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">4.2.1 I "Music Strike" e le Performance a Sorpresa</h4>
+            <p class="mb-4">
+                Invece dei tradizionali "flash mob", adotteremo il concetto di **"Music Strike"**: interventi artistici non annunciati in luoghi inaspettati, progettati per massimizzare l'impatto visivo, emotivo e la viralità. Queste azioni sono pensate per essere altamente cinematografiche e inaspettate.
+            </p>
+            <h5 class="text-xl font-bold mb-2 text-accent-gold">Idee per "Music Strike" e Performance non Convenzionali:</h5>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**"Invisible Orchestra":** Gli strumenti della band sono visibili, ma i musicisti e cantanti sono nascosti o camuffati tra la folla. Quando la musica inizia (di altissima qualità, apparentemente dal nulla), il pubblico cerca la fonte, per poi rivelare gli artisti in un crescendo. Adatto a piazze affollate o stazioni.</li>
+                <li>**"Human Jukebox":** Un piccolo gruppo di cantanti e musicisti acustici posizionati in un luogo di passaggio (es. una galleria commerciale, un mercato storico). Non chiedono nulla, ma hanno un cartello con "Se il tempo si fermasse, quale canzone degli anni '70-'00 vorresti sentire ora?". Le persone scrivono i titoli, loro la eseguono (brevemente) al momento. Genera interazione e riprese spontanee.</li>
+                <li>**"Time Warp Dance":** In un luogo storico o particolarmente frequentato, un ballerino inizia una coreografia con musica apparentemente in cuffia. Lentamente, altri ballerini si uniscono, poi la musica diventa udibile a tutti (da altoparlanti nascosti) e l'intera piazza sembra trasportata in un'altra epoca.</li>
+                <li>**"Silent Disco Invasion":** Una ventina di persone apparentemente "normali" ballano energicamente in silenzio con cuffie personalizzate. Ad un segnale, tolgono le cuffie e la musica esplode da un sistema audio portatile, invitando tutti a unirsi. La stranezza iniziale genera curiosità e attenzione.</li>
+                <li>**"Mirroring Performance":** Un ballerino/cantante inizia una performance in un punto (es. una vetrina, sotto un portico). Dopo pochi minuti, un altro ballerino/cantante identico (o con un costume simile) inizia la stessa performance in un punto distante, creando un effetto di "moltiplicazione" e mistero.</li>
+            </ul>
+            <p class="mb-4">
+                Ogni "Music Strike" sarà concepito per essere **altamente filmabile** con smartphone, incoraggiando la condivisione organica e creando un senso di "dove accadrà il prossimo?". L'attenzione sarà sul non svelare l'intero show, ma fornire "pillole" di energia e qualità.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">4.2.2 Teaser Digitali e Countdown al Mistero</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Video Teaser ad Effetto:** Brevi clip (15-30 secondi) con audio potente, visual enigmatici, e frammenti dello show senza svelare tutto. Ad esempio, solo i piedi dei ballerini in una coreografia energetica, o l'ombra del front-man con un riff riconoscibile.</li>
+                <li>**Countdown Interattivi:** Sui social media, countdown che non annunciano "lo show", ma "il momento della rivelazione" o "l'inizio del fenomeno".</li>
+                <li>**Contenuti "Dietro le Quinte" Selettivi:** Piccoli assaggi del processo creativo (registrazioni, prove vocali) che mostrino la dedizione e la professionalità, senza svelare la magia completa.</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">4.2.3 La Narrazione sui Social Media e il Meccanismo "Pokémon-like"</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Strategia di Username:** Mantenere un nome coerente e memorabile: `@lifeismusicteam` (e backup come `@lifeismusicteam_official`).</li>
+                <li>**Bio Coinvolgente:** Bio su Instagram/TikTok che catturino l'essenza: "🎵 La vita è musica, la musica è vita 🎭 3 ore di pura energia • Anni 70-2000 🎪 Il fenomeno musicale che l'Italia aspettava".</li>
+                <li>**Contenuti a "Doppio Binario":**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Contenuti "Teaser":** Brevi video verticali su TikTok/Reels con snippet musicali, coreografie accattivanti, e inviti all'interazione.</li>
+                        <li>**Contenuti "Narrazione":** Storie Instagram/Facebook che creino un racconto, un viaggio dietro il progetto, con un tono più autentico e meno "patinato".</li>
+                    </ul>
+                </li>
+                <li>**Coinvolgimento degli Artisti:** Gli artisti del cast saranno incoraggiati a creare contenuti propri che amplifichino il messaggio, diventando essi stessi micro-influencer del progetto.</li>
+                <li>**Hashtag Strategici:** Combinazione di hashtag generici (`#LifeIsMusic #MusicIsLife #ShowExperience #LiveMusic #Anni70 #Anni80 #Anni90 #Anni2000 #Party`) con hashtag di nichia (`#RetroSoul #DiscoVibes #FunkRevival`) e localizzati (`#FirenzeEventi #MilanoLive`).</li>
+                <li>**Il Meccanismo "Pokémon-like" di Scoperta:** La strategia di marketing sarà costruita per generare un senso di scoperta progressiva e "collezionismo" dell'esperienza "Life is MUSIC". Il mistero iniziale non è solo un teaser, ma un invito a "catturare" i momenti unici dello show e i suoi elementi distintivi. Ogni "Music Strike", ogni nuovo teaser, la rivelazione di un brano o di un dettaglio dello show, sarà trattato come un "nuovo Pokémon" da scoprire, condividere e "collezionare" mentalmente o sui social. Questo incentiverà il pubblico a seguire attivamente il percorso del progetto per non perdere nessun "elemento raro" dell'esperienza, rafforzando la fedeltà e il passaparola.</li>
+                <li>**Collaborazioni Creative Aperte:** "Life is MUSIC" è aperto a collaborazioni creative con altri artisti, videomaker, influencer e storyteller che possano arricchire la narrazione del progetto e la sua diffusione virale, mantenendo sempre alta la qualità e l'allineamento con il brand.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">4.3 Gli Eventi Pilota: Il Test sul Campo e la Generazione di Contenuto</h3>
+            <p class="mb-4">
+                Gli "eventi pilota" sono una componente cruciale della strategia di "Reverse Hype" e di validazione del prodotto sul campo. Non sono spettacoli completi, ma showcase di 45-60 minuti, pensati per raffinare l'esperienza e generare materiale promozionale di altissima qualità in un contesto autentico.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Cosa sono:** Showcase condensati di 45-60 minuti, in location piccole, intime e di tendenza (es. club selezionati, locali con palco come il Combo a Firenze, spazi alternativi).</li>
+                <li>**Quanti e Quando:** Si prevedono due eventi pilota nel Mese 4 di sviluppo del progetto.
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Evento su Invito:** Riservato a un pubblico selezionato di addetti ai lavori (promoter, giornalisti musicali, influencer locali, opinion leader). L'obiettivo è ottenere feedback qualificati, generare copertura stampa e, soprattutto, convincere i primi promoter a investire nello show completo.</li>
+                        <li>**Evento a Prezzo Simbolico:** Aperto a un primo pubblico di fan, selezionati magari tramite concorsi sui social media o pre-registrazioni. Crea un senso di esclusività e genera un passaparola autentico ("Io c'ero").</li>
+                    </ul>
+                </li>
+                <li>**Obiettivo Primario:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Test sul Campo:** Valutare la reazione del pubblico all'energia dello show, alla scaletta e alle interazioni proposte.</li>
+                        <li>**Materiale Audio/Video Professionale:** Ottenere riprese video e audio di altissima qualità con un pubblico VERO, non un set sterile. Questo materiale è inestimabile per le future campagne marketing e per le presentazioni ai promoter.</li>
+                        <li>**Generazione di Passaparola:** Creare un "ronzio" inarrestabile, sfruttando la FOMO (Fear Of Missing Out) e l'esclusività.</li>
+                    </ul>
+                </li>
+                <li>**Gestione del Cast:** Questi eventi rientrano nella "fase di costruzione" del progetto, inclusa nell'accordo di Associazione in Partecipazione. Non prevedono un compenso diretto per gli artisti, ma la produzione copre tutte le spese vive (viaggio, alloggio, ecc.). Questa trasparenza è fondamentale e deve essere chiarita fin dalla firma della Lettera d'Intenti, definendola come un "investimento di sudore" propedeutico alla monetizzazione futura.</li>
+            </ul>
+            <p>
+                Questo capitolo evidenzia come la strategia di "Reverse Hype", combinata con azioni virali intelligenti e eventi pilota mirati, possa costruire un desiderio inespresso e una domanda latente per "Life is MUSIC", trasformando il pubblico in co-creatore del fenomeno.
+            </p>
+        </section>
+
+        <!-- Capitolo 5 -->
+        <section id="capitolo5" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">CAPITOLO 5: Networking, Sviluppo Commerciale ed Esecuzione Operativa</h2>
+
+            <h3 class="text-3xl font-bold mb-4">5.1 Approccio Strategico a Promoter e Teatri</h3>
+            <p class="mb-4">
+                Il team di produzione non aspetta che gli ingaggi arrivino, ma adotta un approccio "chirurgico" e proattivo per presentare "Life is MUSIC" ai decisori chiave del settore dello spettacolo. I promoter sono costantemente sommersi di proposte, per questo è fondamentale distinguersi.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">5.1.1 Il Contatto Iniziale: Calore e Precisione</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Identificazione del Target:** Un'attenta analisi dei cartelloni e delle programmazioni di teatri e circuiti estivi (es. Teatro Cartiera Carrara, Teatro Puccini a Firenze) è il punto di partenza. Si mappano i promoter/agenzie che programmano spettacoli affini (es. musical, concerti-tributo di alto livello, produzioni di grande impatto). Questi dati vengono organizzati in un foglio di calcolo dettagliato (Nome Promoter/Agenzia, Contatto Principale, Storico Spettacoli Programmati, Note).</li>
+                <li>**Riscaldamento del Contatto:** Prima di qualsiasi comunicazione formale, si instaura un "contatto debole" ma significativo. Questo può includere:
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>Seguire il promoter su piattaforme professionali come LinkedIn, interagendo con i suoi post in modo intelligente e pertinente.</li>
+                        <li>Partecipare a eventi di settore dove è prevista la sua presenza, per un'introduzione di persona.</li>
+                        <li>Piccoli gesti di "engagement" che dimostrino conoscenza e rispetto del loro lavoro.</li>
+                    </ul>
+                </li>
+                <li>**L'Email "Chirurgica":** L'email di primo contatto è essenziale e deve essere irresistibile, non generica.
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Oggetto:** Deve catturare l'attenzione e suggerire un valore immediato (es. "Proposta per la stagione 2026: Lo show che ha generato X mila views a Firenze prima del debutto").</li>
+                        <li>**Corpo dell'Email:** Breve, d'impatto e focalizzato sul beneficio per il promoter.
+                            <ul class="list-square list-inside ml-4 mt-2">
+                                <li>**Introduzione:** Presentazione concisa del progetto e del mittente, evidenziando come "Life is MUSIC" si allinei con la programmazione del promoter.</li>
+                                <li>**Il Problema e la Soluzione:** Sottolineare la sfida del "pubblico vuoto" e presentare "Life is MUSIC" come la soluzione chiave, grazie alla strategia di "Reverse Hype" che costruisce già una domanda di pubblico.</li>
+                                <li>**I Numeri:** Utilizzare dati concreti provenienti dagli "eventi pilota" e dalle campagne di "Reverse Hype" (es. engagement sui social, numero di visualizzazioni dei "Music Strike", conversioni dei countdown).</li>
+                                <li>**Call to Action (CTA):** Chiaro invito a una video-call di 15 minuti per presentare il progetto in dettaglio.</li>
+                            </ul>
+                        </li>
+                        <li>**Allegati Strategici:** Non allegare troppi file. Preferire un link a una **Landing Page ottimizzata** (Press Kit Digitale) dove il promoter possa trovare facilmente:
+                            <ul class="list-square list-inside ml-4 mt-2">
+                                <li>Video di alta qualità dagli eventi pilota.</li>
+                                <li>Rassegna stampa e social media sentiment.</li>
+                                <li>Una presentazione concisa del progetto.</li>
+                                <li><a href="https://www.google.com/search?q=link_al_template_presentazione_promoter.pdf" target="_blank" class="font-semibold">Template: Presentazione "Life is MUSIC" per Promoter <i class="fas fa-external-link-alt text-sm"></i></a></li>
+                                <li><a href="https://www.google.com/search?q=link_al_template_dossier_tecnico.pdf" target="_blank" class="font-semibold">Template: Dossier Tecnico Completo per Location <i class="fas fa-external-link-alt text-sm"></i></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">5.2 Strategia di Sviluppo Commerciale e Branding con Partner</h3>
+            <p class="mb-4">
+                Oltre ai promoter di spettacoli, "Life is MUSIC" mira a stabilire partnership strategiche con brand e aziende che condividano i valori di energia, nostalgia e connessione intergenerazionale.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">5.2.1 Approccio ai Brand: Partnership di Valore</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Identificazione:** Ricerca di brand non solo per supporto finanziario, ma per allineamento valoriale e potenziale di co-marketing (es. marchi di abbigliamento retrò, bevande che richiamano gli anni '70/'80, piattaforme di streaming musicale nostalgiche).</li>
+                <li>**Proposta di Valore:** Non una semplice richiesta di sponsorizzazione, ma una proposta di collaborazione win-win che offra al brand:
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Visibilità mirata:** Presenza del brand negli eventi, nei contenuti virali, sul sito web e sui social.</li>
+                        <li>**Engagement del pubblico:** Attivazioni esperienziali durante gli show o i "Music Strike".</li>
+                        <li>**Associazione valoriale:** Il brand si lega all'energia positiva e al messaggio di "Life is MUSIC".</li>
+                    </ul>
+                </li>
+                <li>**Documentazione per i Brand:** Sviluppo di un kit per partner che includa:
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>La visione e i valori di "Life is MUSIC".</li>
+                        <li>Dati demografici e psicografici del pubblico.</li>
+                        <li>Esempi di attivazioni e visibilità proposte.</li>
+                        <li><a href="https://www.google.com/search?q=link_al_template_proposta_brand.pdf" target="_blank" class="font-semibold">Template: Proposta di Partnership per Brand <i class="fas fa-external-link-alt text-sm"></i></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4 class="text-2xl font-bold mb-3">5.2.2 Licenze Musicali e Sviluppo del Catalogo Originale (Opportunità Future)</h4>
+            <p class="mb-4">
+                A lungo termine, il progetto "Life is MUSIC" potrà esplorare la creazione di un proprio catalogo di brani originali, ispirati allo stile e all'energia del periodo. Questo aprirà nuove opportunità di monetizzazione attraverso:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Licenze musicali:** Per uso in pubblicità, film, serie TV, videogiochi.</li>
+                <li>**Vendita di brani:** Digitalmente e fisicamente.</li>
+                <li>**Touring internazionale:** Basato su un repertorio originale consolidato.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">5.3 Produzione e Esecuzione Operativa: La Macchina Perfetta</h3>
+            <p class="mb-4">
+                Una volta acquisiti gli ingaggi, l'eccellenza dello show dipende da una produzione e un'esecuzione impeccabili.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">5.3.1 Gestione delle Prove e Pre-Produzione</h4>
+            <p class="mb-4">
+                La fase di preparazione artistica è il cuore pulsante della qualità di "Life is MUSIC". Le prove non sono un'attività generica, ma un processo strutturato e ottimizzato per massimizzare il tempo e le risorse.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Tipologie di Prove Strategiche:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Prove Selettive per Sezione:** Sessioni dedicate a gruppi specifici (es. ballerini per affinare le coreografie, sezione fiati per armonie e dinamiche, sezione ritmica per groove e timing, cantanti per voci soliste e cori). Questo permette di ottimizzare il lavoro e risolvere problematiche specifiche prima dell'integrazione.</li>
+                        <li>**Prove Unitarie di Integrazione:** Sessioni congiunte di tutti i gruppi artistici per assemblare le parti preparate, affinare le transizioni tra i brani, sincronizzare musica e coreografie, e calibrare la "curva energetica" dello show nel suo complesso. Queste prove sono cruciali per la coesione finale dello spettacolo.</li>
+                    </ul>
+                </li>
+                <li>**Regolamento delle Prove e Codice di Condotta:**
+                    <p class="mt-2">La sala prove e il teatro sono risorse con un costo vivo significativo. Per massimizzare l'efficienza e il rispetto degli investimenti, è indispensabile un **codice di condotta rigoroso** che guidi la partecipazione alle prove.</p>
+                    <p class="mt-2">Questo regolamento specificherà l'importanza di **presenza e puntualità** come pilastri della professionalità. Eventuali assenze o ritardi non giustificati non solo compromettono la preparazione dell'artista singolo, ma gravano in modo esponenziale su tutta la compagnia, ritardando il lavoro collettivo e generando costi aggiuntivi (es. ore extra di sala prove, inattività del resto del cast).</p>
+                    <p class="mt-2">Si valuterà l'implementazione di **meccanismi di responsabilizzazione** condivisi e accettati preventivamente da tutti i membri del cast. Questi meccanismi, definiti nel Contratto di Associazione in Partecipazione, potrebbero includere sistemi di bonus/malus legati alla performance (anche in termini di presenza alle prove), o clausole che quantifichino l'impatto economico di gravi inadempienze, per promuovere la disciplina e la consapevolezza dell'investimento collettivo. L'obiettivo non è punire, ma responsabilizzare e garantire il massimo impegno per il successo condiviso.</p>
+                </li>
+                <li>**Schede Tecniche e Logistica:** Preparazione dettagliata di schede tecniche (rider tecnico, luci, audio) per ogni location, anticipando le esigenze e minimizzando gli imprevisti.</li>
+                <li>**Scaletta Esecutiva:** Oltre alla scaletta artistica, viene creata una scaletta esecutiva dettagliata per la produzione (tempi di montaggio, soundcheck, cambio luci, interventi tecnici).</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">5.3.2 Operazioni Live: L'Esperienza Impeccabile</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Team Tecnico Professionale:** Collaborazione con service audio, luci e video di provata esperienza per garantire standard tecnici elevati.</li>
+                <li>**Gestione del Backstage:** Un team di produzione dedicato assicura il benessere degli artisti, la gestione dei costumi, il trucco e ogni esigenza logistica. **Le spese relative a questo team e ai materiali (costumi, trucco, trasporti specifici, ecc.) sono considerate "Costi Vivi Documentati" e vengono dedotte dal Ricavo Lordo complessivo della data prima della ripartizione dell'utile, come dettagliato nel Capitolo 2.3.**</li>
+                <li>**Coinvolgimento del Pubblico:** Implementazione delle strategie di interazione e coinvolgimento (previste nella curva energetica dello show) per trasformare il pubblico da spettatore passivo a partecipante attivo. Per un approfondimento dettagliato, consultare l'**Appendice A: 50 Idee di Interazione e Coinvolgimento del Pubblico**.</li>
+            </ul>
+            <p>
+                Questo capitolo sottolinea l'importanza di un approccio sistematico e professionale sia nella fase di acquisizione commerciale che nell'esecuzione dello show, pilastri fondamentali per la crescita e la reputazione di "Life is MUSIC".
+            </p>
+        </section>
+
+        <!-- Capitolo 6 -->
+        <section id="capitolo6" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">CAPITOLO 6: Il Fondamento Digitale: Presenza Online e Strumenti Chiave</h2>
+
+            <h3 class="text-3xl font-bold mb-4">6.1 Strategia di Registrazione Domini e Struttura del Sito Web</h3>
+            <p class="mb-4">
+                La presenza online inizia con una solida base di domini e una struttura web chiara, progettata per essere il punto di riferimento centrale per pubblico, promoter e partner.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">6.1.1 Domini da Registrare</h4>
+            <p class="mb-4">
+                Per proteggere il brand e garantire accessibilità internazionale, si prevede la registrazione immediata dei seguenti domini:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**`lifeismusicteam.it`**: Il dominio principale, focalizzato sul mercato italiano.</li>
+                <li>**`lifeismusicteam.com`**: Un dominio di backup e per una futura espansione internazionale.</li>
+                <li>**`lifeisjustmusic.org`**: Un dominio aggiuntivo per protezione del brand e possibili usi futuri (es. iniziative sociali/culturali legate al progetto).</li>
+            </ul>
+            <p class="mb-4">
+                La registrazione e l'hosting sono previsti tramite provider affidabili come Aruba.it (per il `.it`) o GoDaddy/Namecheap (per i domini `.com`/`.org`), con costi ottimizzati per un avvio snello.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">6.1.2 Architettura e Pagine Essenziali del Sito Web</h4>
+            <p class="mb-4">
+                Il sito web sarà sviluppato su una piattaforma flessibile e user-friendly come WordPress, con un tema performante (es. Astra) e un page builder intuitivo (es. Elementor) per facilitare gli aggiornamenti. Le pagine essenziali includeranno:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Home Page:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>Un "hero video" d'impatto con frammenti enigmatici dello show (in linea con la "Reverse Hype").</li>
+                        <li>Un "countdown misterioso" all'evento di rivelazione o al primo "Music Strike".</li>
+                        <li>Una call-to-action chiara per la newsletter o i canali social.</li>
+                    </ul>
+                </li>
+                <li>**About (Chi Siamo):** La storia del progetto, la sua visione e filosofia, senza rivelare subito l'intero cast per mantenere un velo di mistero iniziale.</li>
+                <li>**Shows (Calendario Eventi):** Una sezione dedicata agli eventi futuri, anche se inizialmente vuota, per preparare il terreno.</li>
+                <li>**Contact (Contatti):** Un modulo di contatto e tutti i link ai social media.</li>
+                <li>**Press Kit:** Un'area dedicata per il download di materiali stampa e risorse per media e promoter. Questo si collegherà idealmente al "Press Kit Digitale" menzionato nel Capitolo 5.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">6.2 Strategia di Presenza e Engagement sui Social Media</h3>
+            <p class="mb-4">
+                Una strategia social media coerente e dinamica è fondamentale per alimentare la "Reverse Hype" e costruire una community fedele.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">6.2.1 Uniformità degli Username e Biografia Coinvolgente</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Username Unico:** L'obiettivo è mantenere l'username `@lifeismusicteam` su tutte le piattaforme principali (Instagram, TikTok, YouTube, Facebook) per garantire coerenza e facilità di ricerca. Verranno considerate alternative solo se l'username primario fosse indisponibile.</li>
+                <li>**Biografia Strategica:** Ogni biografia sarà concisa, d'impatto e allineata con il messaggio di "Life is MUSIC", invitando all'interazione (es. "🎵 La vita è musica, la musica è vita 🎭 3 ore di pura energia • Anni 70-2000 🎪 Il fenomeno musicale che l'Italia aspettava"). L'utilizzo di Linktree o strumenti simili sarà essenziale per raggruppare tutti i link importanti in un'unica URL.</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">6.2.2 Piattaforme Chiave e Contenuti di Lancio</h4>
+            <p class="mb-4">
+                Le piattaforme principali per la strategia di "Reverse Hype" e l'engagement iniziale sono:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Instagram Business (@lifeismusicteam):** Per contenuti visivi di alta qualità, "teaser" e storie interattive.</li>
+                <li>**TikTok Business (@lifeismusicteam):** Cruciale per la viralità, con audio teaser di 15 secondi, sfide di ballo e snippet delle "Music Strike".</li>
+                <li>**YouTube (Canale Ufficiale):** Per video di maggiore durata, dietro le quinte selettivi, e performance dagli eventi pilota. Sarà un hub per il materiale più "completo".</li>
+                <li>**Facebook (Pagina Business):** Per un pubblico più ampio e per la creazione di eventi, con un focus sul "The Revelation" o eventi analoghi.</li>
+            </ul>
+            <p class="mb-4">
+                Il "Primo Contenuto" da lanciare immediatamente includerà:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>Post Instagram: "Something is coming" con visual enigmatici.</li>
+                <li>TikTok: Audio teaser di 15 secondi con frammenti di musica e movimento.</li>
+                <li>Facebook: Creazione di un evento "The Revelation" (o similare) per generare interesse.</li>
+                <li>Stories: Countdown di 7 giorni per creare attesa.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">6.3 Strumenti Digitali Essenziali per la Gestione e la Produzione</h3>
+            <p class="mb-4">
+                Per supportare le attività di marketing, gestione e produzione, verranno adottati strumenti digitali chiave:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Canva Pro:** Per la creazione rapida e professionale di grafiche social, presentazioni e materiali di branding.</li>
+                <li>**CapCut (su smartphone):** Per l'editing video rapido e di qualità per i contenuti social verticali.</li>
+                <li>**Trello (o sistema analogo):** Per la gestione del progetto e la coordinazione del team ("Life is MUSIC" board).</li>
+                <li>**Google Drive (Condiviso):** Per l'organizzazione centralizzata di tutti i documenti, materiali artistici e file di produzione.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">6.4 Budget Iniziale per il Setup Digitale</h3>
+            <p class="mb-4">
+                Un'attenta pianificazione del budget iniziale è cruciale per la sostenibilità e la rapidità del setup.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">6.4.1 Costi Mensili Ricorrenti (Stima)</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Domini + Hosting:** €35/mese (copre più domini e hosting WordPress).</li>
+                <li>**Canva Pro:** €10/mese (per la suite completa di design).</li>
+                <li>**Software Scheduling (Social Media):** €15/mese (strumenti per la programmazione dei post).</li>
+                <li>**Google Workspace:** €6/mese (per email professionali e collaborazione cloud).</li>
+                <li>**TOTALE Mensile Stimato:** €66/mese</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">6.4.2 Costi Una Tantum (Stima Iniziale)</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Logo Professionale (es. Fiverr):** €50 (per un design di base ma efficace).</li>
+                <li>**Template Grafici (es. 99designs):** €100 (per kit di design pronti all'uso).</li>
+                <li>**Setup Tecnico Iniziale:** €150 (configurazione iniziale di WordPress, integrazioni social, ecc.).</li>
+                <li>**TOTALE Una Tantum Stimato:** €300</li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">6.4.3 Investimento Totale Primo Mese</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**TOTALE INVESTIMENTO PRIMO MESE:** €366 (€66 mensili + €300 una tantum)</li>
+            </ul>
+            <p>
+                Questo capitolo fornisce una roadmap chiara per la costruzione e l'attivazione della presenza digitale di "Life is MUSIC", un elemento indispensabile per la strategia di "Reverse Hype" e per la gestione efficiente del progetto.
+            </p>
+        </section>
+
+        <!-- Capitolo 7 -->
+        <section id="capitolo7" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">CAPITOLO 7: Monitoraggio, Ottimizzazione e Gestione del Rischio</h2>
+
+            <h3 class="text-3xl font-bold mb-4">7.1 Sistemi di Monitoraggio e Ottimizzazione Continua</h3>
+            <p class="mb-4">
+                Per massimizzare il ritorno sull'investimento (ROI) di ogni attività e per adattare rapidamente la strategia, è fondamentale implementare un solido sistema di monitoraggio.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Revisione Settimanale KPI:** Il team di produzione si riunirà ogni lunedì mattina per una sessione di 30 minuti dedicata alla revisione dei Key Performance Indicators (KPI) della settimana precedente.
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Domande Chiave:** Cosa ha funzionato? Cosa no? Quali metriche sono migliorate o peggiorate?</li>
+                        <li>**Azioni Adattive:** Se, ad esempio, un "Music Strike" genera un picco significativo di engagement e visualizzazioni, si pianificheranno immediatamente azioni simili. Se un tipo di contenuto non performa come previsto, verrà eliminato o modificato, e si testeranno nuove approcci. Questo approccio "agile" permette di ottimizzare la strategia in tempo reale.</li>
+                    </ul>
+                </li>
+                <li>**Strumenti di Analisi:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Google Analytics:** Per monitorare il traffico e il comportamento degli utenti sul sito web (`lifeismusicteam.it`, `lifeismusicteam.com`).</li>
+                        <li>**TikTok Analytics, Instagram Insights, Meta Business Suite, YouTube Studio:** Per analizzare l'engagement sui social media, identificare i contenuti più performanti (es. video con più condivisioni, orari di maggiore attività) e comprendere il pubblico.</li>
+                        <li>**Google Data Studio (o strumenti di reporting equivalenti):** Per creare dashboard personalizzate che aggregano i dati da diverse fonti, offrendo una visione olistica e facilmente interpretabile delle performance.</li>
+                    </ul>
+                </li>
+                <li>**Esempio di Ottimizzazione:** Ispirarsi a casi di successo come le campagne di marketing guidate dai dati di grandi artisti o brand, che utilizzano l'analisi dei social media per affinare il messaggio e la distribuzione dei contenuti.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">7.2 Gestione del Rischio e Strategie di Contingenza (Plan B)</h3>
+            <p class="mb-4">
+                Ogni progetto ambizioso comporta rischi. "Life is MUSIC" adotta un approccio proattivo per identificare i potenziali ostacoli e sviluppare strategie di mitigazione e di "pivot" (cambiamento di direzione strategica) per mantenere la rotta verso il successo.
+            </p>
+            <h4 class="text-2xl font-bold mb-3">7.2.1 Rischi Identificati e Mitigazione</h4>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Casting Inadeguato:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Mitigazione:** Implementazione di un processo di selezione multi-step approfondito (come descritto nel Capitolo 3), con sessioni di prova estese e la creazione di un pool di talenti di backup qualificati.</li>
+                    </ul>
+                </li>
+                <li>**Contenuti non Virali / Basso Engagement:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Mitigazione:** Sviluppo di un portfolio diversificato di contenuti (teasers, dietro le quinte, interazioni) e analisi A/B test costante delle strategie di "Reverse Hype". Rapidità nell'identificare e replicare i formati di maggior successo, scartando quelli meno efficaci.</li>
+                    </ul>
+                </li>
+                <li>**Concorrenza Imprevista:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Mitigazione:** Focalizzazione continua sulla "unique selling proposition" di "Life is MUSIC" (l'energia degli anni '70-'00, il modello "Equity for Talent", l'esperienza immersiva) e mantenimento di uno standard di qualità artistica e produttiva superiore.</li>
+                    </ul>
+                </li>
+                <li>**Stagionalità degli Eventi:**
+                    <ul class="list-circle list-inside ml-4 mt-2">
+                        <li>**Mitigazione:** Pianificazione di un tour diversificato che includa teatri al coperto per la stagione invernale e festival/eventi all'aperto per l'estate, massimizzando le opportunità di ingaggio durante tutto l'anno.</li>
+                    </ul>
+                </li>
+            </ul>
+            <h4 class="text-2xl font-bold mb-3">7.2.2 Strategie di Pivot (Piano B)</h4>
+            <p class="mb-4">
+                In scenari avversi o di cambiamento del mercato, "Life is MUSIC" è pronto ad adattarsi con strategie di pivot:
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Formato Ridotto dello Show:** In caso di limitazioni logistiche o budget, è possibile optare per showcase di 90 minuti o versioni acustiche/semi-acustiche dello show, mantenendo l'essenza artistica.</li>
+                <li>**Focus Digital-First:** Se la ripartenza degli eventi live dovesse rallentare, si rafforzerebbe ulteriormente la strategia digitale, investendo maggiormente nella produzione di contenuti esclusivi online, eventi in streaming interattivi e monetizzazione attraverso piattaforme digitali.</li>
+                <li>**Espansione Internazionale:** Se il mercato italiano dovesse saturarsi o presentare ostacoli, si valuterà un'espansione mirata verso mercati esteri, sfruttando la riconoscibilità universale della musica anni '70-'00.</li>
+                <li>**Evoluzione in Produzione Teatrale/Musical:** A lungo termine, il progetto potrebbe evolvere verso una produzione teatrale completa o un musical originale, capitalizzando sul successo dello show live e sul team artistico consolidato.</li>
+            </ul>
+
+            <h3 class="text-3xl font-bold mb-4">7.3 Conclusione: L'Invito all'Azione e la Visione di Crescita</h3>
+            <p class="mb-4">
+                "Life is MUSIC" è molto più di una scaletta di canzoni; è un progetto meticolosamente strutturato che unisce visione artistica e rigore imprenditoriale.
+            </p>
+            <ul class="list-disc list-inside ml-4 mb-4">
+                <li>**Agli Investitori:** Offriamo un'opportunità di investimento in un progetto con un basso rischio iniziale (grazie al modello "Equity for Talent" e "Reverse Hype") e un altissimo potenziale di scalabilità e ritorno sull'investimento (ROI) nel medio-lungo termine. Non si investe in una semplice idea, ma in un team competente e in un piano d'azione dettagliato, pronto per l'esecuzione e in grado di adattarsi alle sfide.</li>
+                <li>**Ai Promoter:** Proponiamo uno show-experience "chiavi in mano" che non solo garantisce alta qualità artistica e tecnica, ma arriva con una domanda di pubblico già costruita e un potenziale mediatico capace di riempire le sale, riducendo il loro rischio promozionale.</li>
+                <li>**Al Team e agli Artisti:** L'invito è a diventare soci fondatori di un fenomeno. "Life is MUSIC" mette sul tavolo un'idea eccezionale e una struttura professionale solida; gli artisti apportano il loro talento in un'ottica di partnership. Insieme, l'obiettivo non è solo creare uno spettacolo memorabile, ma costruire un'eredità duratura nel panorama dell'intrattenimento.</li>
+            </ul>
+            <p>
+                Siamo pronti a premere "play" su questo progetto.
+            </p>
+        </section>
+
+        <!-- Sezione FAQ -->
+        <section id="faq" class="card mb-12 animate-on-scroll">
+            <h2 class="text-4xl font-bold mb-6 text-accent-gold">Domande Frequenti (FAQ)</h2>
+            <div class="space-y-4 document-accordion">
+                <details>
+                    <summary>Che cos'è "Life is MUSIC"? <i class="fas fa-chevron-right ml-2"></i></summary>
+                    <p>
+                        "Life is MUSIC" è un'innovativa show-experience dal vivo che celebra la musica e la danza dagli anni '70 ai primi anni 2000. Non è una semplice cover band, ma uno spettacolo di 2 ore e 45 minuti con una band di 11 elementi, 4 cantanti e 6 ballerini, progettato per creare un fenomeno mediatico e coinvolgere diverse generazioni.
+                    </p>
+                </details>
+                <details>
+                    <summary>Come viene remunerato il cast artistico? <i class="fas fa-chevron-right ml-2"></i></summary>
+                    <p>
+                        Il cast è remunerato tramite un modello "Equity for Talent". Il 75% dell'utile lordo di ogni spettacolo (dopo aver coperto i costi vivi) è destinato al "Monte Ingaggi Artistico", suddiviso tra gli artisti tramite un sistema di quote predefinite, promuovendo una partnership in cui il successo collettivo è un obiettivo comune.
+                    </p>
+                </details>
+                <details>
+                    <summary>Qual è la strategia di marketing principale? <i class="fas fa-chevron-right ml-2"></i></summary>
+                    <p>
+                        La strategia principale è la "Reverse Hype". Questo approccio mira a generare attesa e curiosità attraverso il mistero, contenuti di alta qualità e azioni virali non convenzionali (come i "Music Strike" o performance a sorpresa), creando un passaparola organico prima del lancio ufficiale e riducendo la necessità di investimenti pubblicitari massivi.
+                    </p>
+                </details>
+                <details>
+                    <summary>Come vengono gestite le prove e la disciplina del team? <i class="fas fa-chevron-right ml-2"></i></summary>
+                    <p>
+                        Le prove sono strutturate in sessioni selettive per sezione (ballerini, cantanti, musicisti) e prove unitarie di integrazione. È previsto un rigoroso codice di condotta per la puntualità e la presenza, con meccanismi di responsabilizzazione condivisi per garantire l'efficienza, data l'importanza della sala prove come risorsa a costo vivo e l'impatto di eventuali assenze sul lavoro collettivo.
+                    </p>
+                </details>
+                <details>
+                    <summary>Il progetto prevede collaborazioni esterne? <i class="fas fa-chevron-right ml-2"></i></summary>
+                    <p>
+                        Sì, "Life is MUSIC" è aperto a collaborazioni creative con artisti, videomaker, influencer e storyteller per arricchire la narrazione del progetto e amplificarne la diffusione virale, mantenendo sempre alta la qualità e l'allineamento con il brand.
+                    </p>
+                </details>
             </div>
         </section>
 
-        <section id="artistico" class="mb-16">
-            <div class="section-card animate-on-scroll">
-                <h2 class="section-title text-4xl mb-8">2.0. Il Progetto Artistico: Un'Esperienza Immersiva</h2>
-                <p class="text-lg mb-6">Il fulcro di "Life is MUSIC" è la qualità artistica senza compromessi. Non un semplice concerto, ma un viaggio emotivo attraverso le hit che hanno segnato intere generazioni. Lo show è pensato per unire nostalgia e innovazione, offrendo un'esperienza che va oltre la semplice esecuzione musicale.</p>
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Dettagli dello Spettacolo</h3>
-                <ul class="list-disc list-inside text-lg mb-6">
-                    <li class="mb-2">Durata: 165 minuti (inclusa pausa di 15 minuti)</li>
-                    <li class="mb-2">Cast: 11 musicisti (band completa), 4 vocalist di spicco, 6 ballerini professionisti.</li>
-                    <li class="mb-2">Scaletta: Oltre 40 hit riarrangiate, un mix esplosivo dagli anni '70 al 2000.</li>
-                    <li class="mb-2">Produzione: Direzione artistica e arrangiamenti curati da professionisti del settore.</li>
-                </ul>
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Elementi distintivi:</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Qualità Sonora:</h4>
-                        <p class="text-lg">Arrangiamenti inediti che rispettano l'originale ma aggiungono un tocco moderno, curati nei minimi dettagli per un'esperienza audio coinvolgente.</p>
-                    </div>
-                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Impatto Visivo:</h4>
-                        <p class="text-lg">Coreografie dinamiche, scenografie modulari e un sapiente uso delle luci e delle proiezioni video creano un'atmosfera unica per ogni brano.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="partnership" class="mb-16">
-            <div class="section-card animate-on-scroll">
-                <h2 class="section-title text-4xl mb-8">3.0. Il Modello di Business e Partnership</h2>
-                <p class="text-lg mb-6">Il modello di business di "Life is MUSIC" è innovativo e mira a trasformare le sfide in opportunità. La chiave è il modello "equity for talent" (equità per il talento) che trasforma il cast artistico da semplici ingaggiati a veri e propri partner del progetto.</p>
-                
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Equity for Talent: Un Team di Partner</h3>
-                <p class="text-lg mb-6">Invece di un approccio tradizionale basato su compensi fissi, offriamo al nostro cast una quota sui profitti. Questo allinea gli interessi di tutti i partecipanti, motivando l'intero team a raggiungere il successo dello show. Vantaggi:</p>
-                <ul class="list-disc list-inside text-lg mb-6">
-                    <li class="mb-2">**Motivazione Accresciuta**: Ogni membro del cast è incentivato a contribuire al massimo, sapendo che il successo dello show è anche il proprio successo economico.</li>
-                    <li class="mb-2">**Riduzione del Rischio Iniziale**: Si riduce la necessità di un grande capitale iniziale per coprire i costi fissi del personale.</li>
-                    <li class="mb-2">**Maggiore Stabilità**: Il team è più propenso a rimanere a lungo termine nel progetto.</li>
-                </ul>
-
-                <h3 class="3xl font-bold text-accent-magenta mb-4">Modello di Entrate</h3>
-                <p class="text-lg mb-6">Le nostre principali fonti di entrata includono:</p>
-                <div class="chart-container">
-                    <canvas id="revenueMixChart"></canvas>
-                </div>
-                <p class="text-sm text-gray-400 mt-2 text-center">Distribuzione prevista delle entrate.</p>
-            </div>
-        </section>
-
-        <section id="strategia" class="mb-16">
-            <div class="section-card animate-on-scroll">
-                <h2 class="section-title text-4xl mb-8">4.0. Strategia di Marketing e Crescita: Il "Reverse Hype"</h2>
-                <p class="text-lg mb-6">La nostra strategia di marketing è tanto innovativa quanto lo show stesso. Il "Reverse Hype" è un approccio che genera domanda e coinvolgimento prima di investire massicciamente in pubblicità tradizionale, creando un fenomeno virale e una base di fan dedicati.</p>
-
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Come Funziona il "Reverse Hype":</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 1: Coinvolgimento del Talento</h4>
-                        <p class="text-lg">Utilizziamo la fan base esistente del nostro cast artistico e del team di produzione per generare interesse iniziale. Ogni membro del team promuove lo show sui propri canali social, creando un passaparola autentico e mirato.</p>
-                    </div>
-                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 2: Contenuti Esclusivi</h4>
-                        <p class="text-lg">Produciamo "pillole" video e contenuti dietro le quinte (backstage) che mostrano il processo creativo, le prove, le interviste agli artisti. Questi contenuti esclusivi sono distribuiti sui social media, generando curiosità e aspettativa.</p>
-                    </div>
-                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 3: Campagne Targettizzate</h4>
-                        <p class="text-lg">Solo dopo aver generato un solido "buzz" e identificato il pubblico più ricettivo, lanciamo campagne pubblicitarie digitali mirate (es. Facebook Ads, Google Ads) e partnership con influencer per amplificare ulteriormente il messaggio.</p>
-                    </div>
-                    <div class="p-6 rounded-lg shadow-lg" style="background-color: rgba(0, 0, 0, 0.3);">
-                        <h4 class="text-2xl font-bold text-yellow-gold mb-2">Fase 4: Vendita e Fenomeno</h4>
-                        <p class="text-lg">La domanda pre-esistente si traduce in prevendite solide, che a loro volta attraggono l'attenzione dei media tradizionali e dei promoter, creando un "fenomeno" e un ciclo virtuoso di crescita.</p>
-                    </div>
-                </div>
-
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Imbuto di Marketing (Funnel)</h3>
-                <div class="flex flex-col items-center justify-center gap-4">
-                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">AWARENESS (Social Media, Passaparola, Contenuti Backstage)</div>
-                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">INTEREST (Pillole video, Anteprime, Interviste)</div>
-                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">CONSIDERATION (Landing Page, Dettagli Show, Recensioni Anticipate)</div>
-                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">CONVERSION (Ticket Sales, Eventi Privati, Sponsorizzazioni)</div>
-                    <div class="diagram-funnel-layer w-full md:w-3/4 lg:w-2/3">ADVOCACY (Fan Base, Contenuti Generati dagli Utenti, Passaparola Post-Show)</div>
-                </div>
-                <p class="text-sm text-gray-400 mt-2 text-center">Un approccio a imbuto per convertire l'interesse in profitto e advocacy.</p>
-            </div>
-        </section>
-
-        <section id="roadmap" class="mb-16">
-            <div class="section-card animate-on-scroll">
-                <h2 class="section-title text-4xl mb-8">5.0. Roadmap e Tempistiche</h2>
-                <p class="text-lg mb-6">La nostra roadmap è ambiziosa ma realistica, progettata per portare "Life is MUSIC" dal concept al successo sul palco, con fasi ben definite e obiettivi chiari.</p>
-                
-                <h3 class="text-3xl font-bold text-accent-magenta mb-4">Fasi del Progetto</h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr>
-                                <th>Fase</th>
-                                <th>Periodo</th>
-                                <th>Attività Principali</th>
-                                <th>Obiettivi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>**Pre-Produzione**</td>
-                                <td>Giugno 2024 - Gennaio 2025</td>
-                                <td>Definizione scaletta, arrangiamenti, selezione cast, primi incontri di marketing, creazione contenuti "Reverse Hype".</td>
-                                <td>Cast completo, repertorio definito, materiali marketing iniziali pronti.</td>
-                            </tr>
-                            <tr>
-                                <td>**Produzione**</td>
-                                <td>Febbraio 2025 - Maggio 2025</td>
-                                <td>Prove intensive (musicali, vocali, coreografiche), allestimento scenico, finalizzazione dettagli tecnici, lancio campagna "Reverse Hype" avanzata.</td>
-                                <td>Show pronto per il debutto, forte "buzz" mediatico, prevendite in corso.</td>
-                            </tr>
-                            <tr>
-                                <td>**Debutto e Tour Iniziale**</td>
-                                <td>Giugno 2025 - Dicembre 2025</td>
-                                <td>Debutto ufficiale, prime date in teatri selezionati, ottimizzazione continua dello show, ricerca di promoter e sponsor aggiuntivi.</td>
-                                <td>Feedback positivo del pubblico, riempimento sale, espansione della base fan.</td>
-                            </tr>
-                            <tr>
-                                <td>**Espansione e Consolidamento**</td>
-                                <td>Gennaio 2026 in poi</td>
-                                <td>Estensione del tour a livello nazionale e internazionale, sviluppo merchandising, partnership con brand, esplorazione nuovi format (es. TV, streaming).</td>
-                                <td>"Life is MUSIC" come brand riconosciuto, massimizzazione dei profitti, crescita a lungo termine.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-sm text-gray-400 mt-2 text-center">Timeline dettagliata delle fasi di sviluppo del progetto.</p>
-            </div>
-        </section>
-
-        <section id="documentazione" class="mb-16">
-            <div class="section-card animate-on-scroll">
-                <h2 class="section-title text-4xl mb-8">6.0. Documentazione e Allegati</h2>
-                <p class="text-lg mb-6">Per una comprensione più approfondita del progetto "Life is MUSIC", sono disponibili i seguenti documenti aggiuntivi che dettagliano aspetti specifici del concept, della produzione e della strategia.</p>
-
-                <div class="document-accordion">
-                    <details>
-                        <summary>Project Proposal Completa <i class="fas fa-chevron-right ml-2"></i></summary>
-                        <div class="document-content">
-                            <p>Questo documento fornisce un'analisi dettagliata di tutti gli aspetti del progetto "Life is MUSIC", dalla visione artistica al piano finanziario.</p>
-                            <img src="uploaded:image_395e5e.png-692f6c95-67be-451a-a23e-c7a3b4b3d6a6" alt="Project Proposal Flowchart" class="responsive-img">
-                            <p>Il Project Proposal approfondisce ogni sezione presentata in questa pagina, offrendo dati, statistiche e proiezioni. È ideale per investitori, partner strategici e chiunque voglia comprendere la solidità e il potenziale di questo show. Include analisi di mercato, proiezioni di costo/ricavo e strategie di engagement del pubblico.</p>
-                        </div>
-                    </details>
-                    <details>
-                        <summary>Piano di Marketing Dettagliato <i class="fas fa-chevron-right ml-2"></i></summary>
-                        <div class="document-content">
-                            <p>Un'esplorazione approfondita della nostra strategia "Reverse Hype", con esempi di campagne, target di pubblico e metriche di successo. Questo piano delinea come costruiremo il buzz, genereremo domanda e massimizzeremo la visibilità dello show attraverso canali digitali e partnership strategiche.</p>
-                            <img src="uploaded:image_49d223.png-19292e6a-867e-467d-92de-447839770265" alt="Marketing Funnel" class="responsive-img">
-                            <p>Il documento include: analisi dei canali social media, calendario editoriale per i contenuti esclusivi, strategie di influencer marketing, e un breakdown dettagliato del budget di marketing per ogni fase del lancio e della promozione.</p>
-                        </div>
-                    </details>
-                    <details>
-                        <summary>Scheda Tecnica dello Spettacolo <i class="fas fa-chevron-right ml-2"></i></summary>
-                        <div class="document-content">
-                            <p>Dettagli tecnici sull'allestimento scenico, requisiti audio e luci, planimetrie e specifiche per le location. Essenziale per teatri, venue e team di produzione.</p>
-                            <p>Questa scheda tecnica copre tutto, dall'impianto audio necessario (numero di monitor, tipo di mixer) all'illuminazione (teste mobili, wash, effetti speciali), fino ai requisiti di palco e backline per la band e i ballerini. Include anche note sulla sicurezza e sulla gestione del personale sul palco e nel backstage.</p>
-                        </div>
-                    </details>
-                </div>
-            </div>
-        </section>
-
-        <section id="rag-section">
-            <h2 class="section-title text-4xl">Chiedi al Doc!</h2>
-            <p class="text-lg mb-6 text-center">Hai domande specifiche sul progetto? Inserisci la tua domanda qui sotto e il nostro sistema AI (RAG) cercherà le risposte nei documenti forniti!</p>
-            <textarea id="rag-input" rows="4" placeholder="Fai la tua domanda sul progetto 'Life is MUSIC'..." class="resize-none"></textarea>
-            <button id="rag-button" class="btn-primary">Chiedi all'AI</button>
-            <div id="rag-response">
-                Le risposte dell'AI appariranno qui...
-            </div>
-        </section>
     </main>
 
-    <footer class="bg-gray-900 text-white text-center p-8 mt-16">
-        <div class="container mx-auto">
-            <p>&copy; 2025 Life is MUSIC. Tutti i diritti riservati.</p>
-            <p class="mt-2 text-sm">Contattaci: info@lifeismusic.com</p>
-            <div class="flex justify-center space-x-6 mt-4">
-                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
-                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-instagram text-xl"></i></a>
-                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-twitter text-xl"></i></a>
-                <a href="#" class="text-white hover:text-yellow-gold transition duration-300"><i class="fab fa-youtube text-xl"></i></a>
+    <!-- Modal per Appendice A -->
+    <div id="appendixModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeAppendixBtn">&times;</button>
+            <h2 class="text-3xl font-bold mb-6 text-accent-gold">APPENDICE A: 50 Idee di Interazione e Coinvolgimento del Pubblico</h2>
+            <p class="mb-4 text-sm text-text-light">
+                Le strategie di interazione e coinvolgimento sono fondamentali per trasformare ogni spettacolo in un'esperienza memorabile e personalizzata, rafforzando la connessione tra il pubblico e il brand "Life is MUSIC". Le seguenti proposte sono pensate per essere integrate in diversi momenti dello show, sul palco, nel pre-show, durante l'intervallo e nel post-show, sfruttando tecnologia, creatività e partecipazione attiva.
+            </p>
+
+            <h3 class="text-2xl font-bold mb-4 text-accent-gold">Prima dello Show (Pre-Show & Ingresso)</h3>
+            <div class="appendix-grid">
+                <div class="appendix-item"><strong class="text-gold">1. Playlist Collaborativa:</strong> Votazione brani '70-'00 per playlist pre-show.</div>
+                <div class="appendix-item"><strong class="text-gold">2. "Your Disco Moment" Photo Booth:</strong> Area con oggetti di scena per foto a tema.</div>
+                <div class="appendix-item"><strong class="text-gold">3. Quiz Musicale Interattivo:</strong> Quiz a tema '70-'00 con premi per i vincitori.</div>
+                <div class="appendix-item"><strong class="text-gold">4. DJ Set Tematico (Warm-up):</strong> DJ che scalda l'atmosfera con hit del periodo.</div>
+                <div class="appendix-item"><strong class="text-gold">5. Wall of Fame Digitale:</strong> Schermo con foto/video del pubblico che usa l'hashtag.</div>
+                <div class="appendix-item"><strong class="text-gold">6. "Guess the Era" Challenge:</strong> Indovinello su anno/decennio basato su indizi.</div>
+                <div class="appendix-item"><strong class="text-gold">7. Retro Gaming Corner:</strong> Postazioni con videogiochi arcade/console d'epoca.</div>
+                <div class="appendix-item"><strong class="text-gold">8. Votazione "Best Outfit":</strong> Votazione outfit a tema tramite app/QR code.</div>
+                <div class="appendix-item"><strong class="text-gold">9. Meet & Greet Virtuale:</strong> Foto con filtri AR degli artisti.</div>
+                <div class="appendix-item"><strong class="text-gold">10. Customizable LED Bracelets:</strong> Braccialetti LED che si illuminano a ritmo di musica.</div>
+            </div>
+
+            <h3 class="text-2xl font-bold mt-8 mb-4 text-accent-gold">Durante lo Show (On Stage & Intervallo)</h3>
+            <div class="appendix-grid">
+                <div class="appendix-item"><strong class="text-gold">11. Sing-Along Lyrics on Screen:</strong> Testi delle canzoni sui maxischermi.</div>
+                <div class="appendix-item"><strong class="text-gold">12. "Dance Cam" Interattiva:</strong> Telecamera che inquadra i ballerini tra il pubblico.</div>
+                <div class="appendix-item"><strong class="text-gold">13. "Crowd Request" Live Poll:</strong> Sondaggio in tempo reale per scegliere il brano successivo.</div>
+                <div class="appendix-item"><strong class="text-gold">14. Luci Interattive:</strong> Pubblico influenza i colori delle luci tramite app.</div>
+                <div class="appendix-item"><strong class="text-gold">15. Augmented Reality Overlays:</strong> Proiezioni AR che trasformano lo scenario.</div>
+                <div class="appendix-item"><strong class="text-gold">16. Live Poll "Next Medley":</strong> Votazione sul medley successivo.</div>
+                <div class="appendix-item"><strong class="text-gold">17. Video Message from the Past:</strong> Video preregistrati di personaggi iconici.</div>
+                <div class="appendix-item"><strong class="text-gold">18. Glow Stick Distribution:</strong> Distribuzione di glow stick in momenti chiave.</div>
+                <div class="appendix-item"><strong class="text-gold">19. Audience Chorus Challenge:</strong> Sezioni del pubblico cantano un frammento di coro.</div>
+                <div class="appendix-item"><strong class="text-gold">20. Confetti & Streamer Blasts:</strong> Esplosioni di coriandoli inaspettate.</div>
+                <div class="appendix-item"><strong class="text-gold">21. Personalized Song Dedication:</strong> Richieste di dediche proiettate.</div>
+                <div class="appendix-item"><strong class="text-gold">22. Interactive Visualizations:</strong> Immagini sui megaschermi che reagiscono al suono.</div>
+                <div class="appendix-item"><strong class="text-gold">23. QR Code per Fun Facts:</strong> QR code con curiosità su canzoni/artisti.</div>
+                <div class="appendix-item"><strong class="text-gold">24. Artist Q&A (Intervallo):</strong> Artisti rispondono a domande del pubblico.</div>
+                <div class="appendix-item"><strong class="text-gold">25. "Retro Dance Moves" Tutorial:</strong> Tutorial di passi di danza iconici.</div>
+                <div class="appendix-item"><strong class="text-gold">26. Virtual Backstage Tour:</strong> Live stream del backstage durante l'intervallo.</div>
+                <div class="appendix-item"><strong class="text-gold">27. "Spotlight" Audience Member:</strong> Light designer inquadra un ballerino nel pubblico.</div>
+                <div class="appendix-item"><strong class="text-gold">28. Human Wave Challenge:</strong> Incoraggiare il pubblico a creare un'onda umana.</div>
+                <div class="appendix-item"><strong class="text-gold">29. Lyrics Fill-in-the-Blank:</strong> Frasi di canzoni con parole mancanti da completare.</div>
+                <div class="appendix-item"><strong class="text-gold">30. Interactive Clap-Along Prompts:</strong> Visualizzazioni che guidano il ritmo.</div>
+            </div>
+
+            <h3 class="text-2xl font-bold mt-8 mb-4 text-accent-gold">Post-Show (Uscita & Dopo l'Evento)</h3>
+            <div class="appendix-grid">
+                <div class="appendix-item"><strong class="text-gold">31. After-Party Tematico:</strong> Organizzazione di un after-party in loco o partner.</div>
+                <div class="appendix-item"><strong class="text-gold">32. Meet & Greet Fisico:</strong> Incontro con artisti per VIP/vincitori.</div>
+                <div class="appendix-item"><strong class="text-gold">33. Feedback Wall:</strong> Parete (fisica/digitale) per commenti sullo show.</div>
+                <div class="appendix-item"><strong class="text-gold">34. Survey Post-Show:</strong> Sondaggio di feedback con incentivo.</div>
+                <div class="appendix-item"><strong class="text-gold">35. "My Favorite Song" Sharing:</strong> Condivisione brano preferito con hashtag.</div>
+                <div class="appendix-item"><strong class="text-gold">36. Exclusive Digital Content:</strong> Invio di foto/video inediti via email/app.</div>
+                <div class="appendix-item"><strong class="text-gold">37. "Life is MUSIC" Playlist:</strong> Playlist ufficiale su piattaforme streaming.</div>
+                <div class="appendix-item"><strong class="text-gold">38. Thank You Video from the Cast:</strong> Video di ringraziamento dagli artisti.</div>
+                <div class="appendix-item"><strong class="text-gold">39. Contest Post-Evento:</strong> Contest basato su video/foto del pubblico.</div>
+                <div class="appendix-item"><strong class="text-gold">40. Call to Action per Future Date:</strong> Promozione prossime date con sconto.</div>
+                <div class="appendix-item"><strong class="text-gold">41. Personalized Email Follow-up:</strong> Email personalizzate con ringraziamenti/anticipazioni.</div>
+                <div class="appendix-item"><strong class="text-gold">42. Fan Art / Fan Story Contest:</strong> Concorso per arte/storie ispirate allo show.</div>
+                <div class="appendix-item"><strong class="text-gold">43. "Wall of Memories" online:</strong> Galleria fotografica sul sito con momenti show e foto pubblico.</div>
+                <div class="appendix-item"><strong class="text-gold">44. Charity Partnership:</strong> Collaborazione con associazione benefica.</div>
+                <div class="appendix-item"><strong class="text-gold">45. Limited Edition Merchandise Sales:</strong> Vendita merchandising esclusivo.</div>
+                <div class="appendix-item"><strong class="text-gold">46. "Create Your Own Setlist" Contest:</strong> Pubblico crea mini-scaletta ideale.</div>
+                <div class="appendix-item"><strong class="text-gold">47. Behind-the-Scenes Access:</strong> Accesso digitale a contenuti dietro le quinte.</div>
+                <div class="appendix-item"><strong class="text-gold">48. Live Stream Post-Show Q&A:</strong> Sessione Q&A dal vivo con parte del cast.</div>
+                <div class="appendix-item"><strong class="text-gold">49. "Guest of Honor" Nomination:</strong> Nominare una persona meritevole di essere ospite d'onore.</div>
+                <div class="appendix-item"><strong class="text-gold">50. Future Event Teasers:</strong> Indizi/video criptici sui prossimi eventi.</div>
             </div>
         </div>
-    </footer>
+    </div>
 
     <script>
-        // Chart.js for Revenue Mix
-        const ctx = document.getElementById('revenueMixChart').getContext('2d');
-        const revenueMixChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Biglietteria', 'Sponsorizzazioni', 'Merchandising', 'Eventi Privati'],
-                datasets: [{
-                    data: [50, 30, 10, 10], // Esempio di percentuali
-                    backgroundColor: [
-                        'rgba(255, 215, 0, 0.8)',      // Gold
-                        'rgba(224, 0, 178, 0.8)',    // Magenta
-                        'rgba(74, 144, 226, 0.8)',   // Primary Blue
-                        'rgba(128, 0, 128, 0.8)'     // Purple for private events
-                    ],
-                    borderColor: [
-                        'rgba(255, 215, 0, 1)',
-                        'rgba(224, 0, 178, 1)',
-                        'rgba(74, 144, 226, 1)',
-                        'rgba(128, 0, 128, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#FFFFFF' // White labels for dark background
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed !== null) {
-                                    label += context.parsed + '%';
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Toggle navigation for mobile (if implementing a hamburger menu)
-        // const navToggle = document.getElementById('nav-toggle');
-        // const navMenu = document.getElementById('nav-menu');
-        // if (navToggle) {
-        //     navToggle.addEventListener('click', () => {
-        //         navMenu.classList.toggle('hidden');
-        //     });
-        // }
-
-        // RAG functionality
-        const ragInput = document.getElementById('rag-input');
-        const ragButton = document.getElementById('rag-button');
-        const ragResponseDiv = document.getElementById('rag-response');
-
-        ragButton.addEventListener('click', async () => {
-            const question = ragInput.value;
-            if (!question) {
-                ragResponseDiv.innerHTML = 'Per favore, inserisci una domanda.';
-                ragResponseDiv.classList.remove('has-content');
-                return;
-            }
-
-            ragResponseDiv.innerHTML = 'Ricerca in corso...';
-            ragResponseDiv.classList.remove('has-content'); // Remove content class while loading
-
-            try {
-                // Sostituisci YOUR_NETLIFY_FUNCTION_URL con l'URL effettivo della tua funzione Netlify
-                const response = await fetch('/.netlify/functions/ask-rag', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ question: question }),
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    let sourcesHtml = '';
-                    if (data.sources && data.sources.length > 0) {
-                        sourcesHtml = `
-                            <div class="sources-list">
-                                <h4 class="text-xl font-bold">Fonti trovate:</h4>
-                                <ul>
-                                    ${data.sources.map(source => `<li>${source.file_name} (Similarità: ${source.similarity ? (source.similarity * 100).toFixed(2) + '%' : 'N/A'})</li>`).join('')}
-                                </ul>
-                            </div>
-                        `;
-                    } else {
-                        sourcesHtml = '<p class="text-sm text-gray-400 mt-4">Nessuna fonte rilevante trovata nei documenti caricati.</p>';
-                    }
-
-                    ragResponseDiv.innerHTML = `
-                        <p>${data.answer}</p>
-                        ${sourcesHtml}
-                    `;
-                    ragResponseDiv.classList.add('has-content');
-                } else {
-                    ragResponseDiv.innerHTML = `Errore: ${data.error || 'Qualcosa è andato storto.'}`;
-                    ragResponseDiv.classList.remove('has-content');
-                }
-            } catch (error) {
-                console.error('Errore durante la richiesta RAG:', error);
-                ragResponseDiv.innerHTML = 'Errore durante la comunicazione con il server. Riprova più tardi.';
-                ragResponseDiv.classList.remove('has-content');
-            }
-        });
-
-        // Scroll animation logic (if you want to re-enable, add 'animate-on-scroll' class to elements)
+        // Funzione per l'animazione degli elementi allo scroll
         const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 } else {
-                    // Optional: remove 'visible' class when out of view if you want repeat animations
-                    // entry.target.classList.remove('visible'); 
+                    // Opzionale: rimuovi 'visible' class quando non è più in vista se vuoi animazioni ripetute
+                    // entry.target.classList.remove('visible');
                 }
             });
-        }, { threshold: 0.1 }); // Adjust threshold as needed
+        }, { threshold: 0.1 }); // Regola la soglia come necessario
 
         animateOnScrollElements.forEach(element => {
             observer.observe(element);
         });
 
-        // Logic for accordion arrow rotation
+        // Logica per la rotazione della freccia nell'accordion e attivazione/disattivazione
         document.querySelectorAll('.document-accordion details').forEach((details) => {
             details.addEventListener('toggle', () => {
                 const icon = details.querySelector('summary i');
                 if (details.open) {
-                    icon.classList.add('fa-chevron-down');
                     icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-chevron-down');
                 } else {
-                    icon.classList.add('fa-chevron-right');
                     icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-right');
                 }
             });
         });
+
+        // Logica per il modal dell'Appendice A
+        const appendixModal = document.getElementById('appendixModal');
+        const openAppendixBtn = document.getElementById('openAppendixBtn');
+        const closeAppendixBtn = document.getElementById('closeAppendixBtn');
+
+        openAppendixBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Impedisce il comportamento predefinito del link
+            appendixModal.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Impedisce lo scroll del body
+        });
+
+        closeAppendixBtn.addEventListener('click', () => {
+            appendixModal.classList.remove('open');
+            document.body.style.overflow = ''; // Ripristina lo scroll del body
+        });
+
+        // Chiudi il modal cliccando fuori dal contenuto
+        appendixModal.addEventListener('click', (e) => {
+            if (e.target === appendixModal) {
+                appendixModal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Aggiungi logica per evidenziare il link di navigazione attivo
+        const sections = document.querySelectorAll('main section');
+        const navLinks = document.querySelectorAll('.navbar a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100; // Offset per attivazione più anticipata
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Inizializza Chart.js se ci sono canvas con id specifici (come da PLAN DANIELE.HTML)
+        // Questa parte è commentata in quanto i dati per i grafici non sono inclusi in questo documento per semplicità,
+        // ma è un promemoria di come verrebbero attivati se i dati fossero presenti.
+        /*
+        window.onload = function() {
+            const energyCtx = document.getElementById('energyCurveChart');
+            if (energyCtx) {
+                const energyCurveConfig = {
+                    type: 'line',
+                    data: {
+                        labels: ['Inizio', 'Q1', 'Q2', 'Picco', 'Intervallo', 'Q3', 'Q4', 'Finale'],
+                        datasets: [{
+                            label: 'Curva Energetica dello Show',
+                            data: [0, 60, 80, 100, 50, 70, 90, 100],
+                            borderColor: 'var(--accent-gold)',
+                            tension: 0.4,
+                            fill: true,
+                            backgroundColor: 'rgba(255, 215, 0, 0.1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Curva Energetica dello Show',
+                                color: 'var(--accent-gold)',
+                                font: { family: 'Bebas Neue', size: 24 }
+                            },
+                            legend: {
+                                labels: { color: 'var(--text-light)' }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: 'var(--text-light)' },
+                                grid: { color: 'rgba(255,255,255,0.1)' }
+                            },
+                            y: {
+                                ticks: { color: 'var(--text-light)' },
+                                grid: { color: 'rgba(255,255,255,0.1)' }
+                            }
+                        }
+                    }
+                };
+                new Chart(energyCtx.getContext('2d'), energyCurveConfig);
+            }
+
+            const revenueCtx = document.getElementById('revenueMixChart');
+            if (revenueCtx) {
+                const revenueMixData = {
+                    labels: ['Biglietti/Ingaggi Diretti', 'Merchandising/Licensing', 'Sponsorizzazioni/Partnership'],
+                    datasets: [{
+                        data: [75, 15, 10],
+                        backgroundColor: ['#FF0000', '#FFD700', '#FFFFFF'], // Rosso Vivo, Giallo Oro, Bianco
+                        hoverOffset: 4
+                    }]
+                };
+                const revenueMixConfig = {
+                    type: 'doughnut',
+                    data: revenueMixData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Mix delle Entrate (Obiettivo a 18 mesi)',
+                                color: 'var(--accent-gold)',
+                                font: { family: 'Bebas Neue', size: 24 }
+                            },
+                            legend: {
+                                position: 'right',
+                                labels: { color: 'var(--text-light)' }
+                            }
+                        }
+                    }
+                };
+                new Chart(revenueCtx.getContext('2d'), revenueMixConfig);
+            }
+        };
+        */
     </script>
 </body>
 </html>
