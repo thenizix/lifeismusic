@@ -3,10 +3,11 @@ const { createClient } = require('@supabase/supabase-js');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 exports.handler = async (event, context) => {
-  // *** AGGIUNGI QUESTE DUE RIGHE QUI, ALL'INIZIO DELLA FUNZIONE exports.handler ***
+  // --- LOG DI DEBUG AGGIUNTIVI ---
   console.log('drive-webhook function started');
-  console.log('Event body:', event.body);
-  // ********************************************************************************
+  console.log('Event raw body:', event.body); // Questo mostrerà il body grezzo
+  console.log('Event headers:', JSON.stringify(event.headers, null, 2)); // Questo mostrerà tutti gli header
+  // ---------------------------------
 
   try {
     // Configurazione clients
@@ -27,38 +28,40 @@ exports.handler = async (event, context) => {
 
     const drive = google.drive({ version: 'v3', auth });
 
-    // Estrai file ID dal webhook di Google Drive
-    const notification = JSON.parse(event.body);
-    const fileId = notification.resourceId; // L'ID del file che è stato modificato/creato
+    // --- ESTRAZIONE fileId DAGLI HEADERS (MODIFICA CRITICA) ---
+    // Google Drive spesso invia l'ID della risorsa negli header, non nel body per le notifiche 'watch'
+    const fileId = event.headers['X-Goog-Resource-Id'] || event.headers['x-goog-resource-id'];
 
-    // --- NUOVE FUNZIONALITÀ: Gestione Cancellazione e Metadati Estesi ---
+    if (!fileId) {
+        console.error('Errore grave: ID risorsa (file/cartella) non trovato negli header X-Goog-Resource-Id del webhook. Il body potrebbe essere vuoto o non un JSON valido per questo tipo di notifica.');
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ error: 'Missing X-Goog-Resource-Id in webhook headers. Event body might be empty or not a valid JSON for this notification type.' })
+        };
+    }
+    console.log('Processed fileId from webhook headers:', fileId);
 
-    // Google Drive webhook invia notifiche per vari tipi di eventi.
-    // Dobbiamo verificare se l'evento è una cancellazione.
-    // L'identificazione di una cancellazione da Google Drive webhook è più complessa e spesso richiede il polling
-    // del Change Feed API di Drive. Per ora, ci concentriamo su creazione/modifica.
-    // Se un file viene cancellato da Drive, non verrà processato qui.
-    // La gestione completa delle cancellazioni richiede un meccanismo separato e più robusto.
+    // Controlla lo stato della risorsa per capire il tipo di evento (es. 'update', 'trash', 'delete')
+    const resourceState = event.headers['X-Goog-Resource-State'] || event.headers['x-goog-resource-state'];
+    console.log('Resource State:', resourceState);
+    // -------------------------------------------------------------
 
+    // --- LOGICA ESISTENTE PER METADATI ESTESI (SENZA CAMBIAMENTI) ---
     // Ottieni metadati del file, inclusi i parent folder per costruire il folder_path
     const metadata = await drive.files.get({
-      fileId: fileId,
+      fileId: fileId, // Questo userà il `fileId` estratto dagli headers
       fields: 'id,name,mimeType,modifiedTime,parents' // Richiedo anche 'parents'
     });
 
     // Costruisci il folder_path (semplificato)
     let folderPath = null;
     if (metadata.data.parents && metadata.data.parents.length > 0) {
-      // Per una completa path, dovresti ricorsivamente chiamare drive.files.get per ogni parent.
-      // Qui prendiamo solo il primo parent ID per semplicità e lo usiamo come base.
-      // Se hai una struttura folder più complessa, questa logica andrebbe espansa.
       try {
         const parentFolder = await drive.files.get({
           fileId: metadata.data.parents[0],
           fields: 'name'
         });
-        folderPath = `/${parentFolder.data.name}`; // Esempio: "/NomeCartella"
-        // Per percorsi completi tipo /root/folderA/subfolderB, è richiesta logica ricorsiva.
+        folderPath = `/${parentFolder.data.name}`;
       } catch (parentError) {
         console.warn(`Impossibile recuperare il nome della cartella genitore per ${fileId}:`, parentError.message);
         folderPath = null;
@@ -66,15 +69,10 @@ exports.handler = async (event, context) => {
     }
 
     // Estrazione dei tag (Esempio: potresti usare i customProperties o i nomi dei file per i tag)
-    // Per un sistema robusto, dovresti definire come i tag vengono associati ai file in Google Drive.
-    // Per esempio, se i file sono nominati "documento_[tag1]_[tag2].pdf"
     let tags = [];
-    // const filenameLower = metadata.data.name.toLowerCase();
-    // if (filenameLower.includes('[finanza]')) tags.push('finanza');
-    // if (filenameLower.includes('[q2]')) tags.push('Q2');
+    // ------------------------------------------------------------------
 
-    // --- Fine NUOVE FUNZIONALITÀ ---
-
+    // --- ESTRAZIONE CONTENUTO FILE (LOGICA ESISTENTE) ---
     const fileResponse = await drive.files.get({
       fileId: fileId,
       alt: 'media'
@@ -87,26 +85,22 @@ exports.handler = async (event, context) => {
     if (fileMimeType.includes('text/plain')) {
       textContent = fileResponse.data;
     } else if (fileMimeType.includes('application/pdf')) {
-      // Per PDF, avresti bisogno di una libreria di parsificazione PDF (es. pdf-parse)
-      // Che però non è inclusa di default in un ambiente Netlify Functions semplice.
-      // Per ora, salta i PDF o convertili in testo prima del caricamento in Drive.
       console.warn(`Tipo di file non supportato per la parsificazione del contenuto: ${fileMimeType}. Saltando il contenuto.`);
-      textContent = ''; // O un messaggio di errore
+      textContent = '';
     } else if (fileMimeType.includes('application/vnd.google-apps.document')) {
-      // Per Google Docs
       const docResponse = await drive.files.export({
         fileId: fileId,
         mimeType: 'text/plain'
       });
       textContent = docResponse.data;
     } else {
-        // Per altri tipi di file non gestiti
-        console.warn(`Tipo di file non supportato per l'estrazione del testo: ${fileMimeType}.`);
-        textContent = '';
+      console.warn(`Tipo di file non supportato per l'estrazione del testo: ${fileMimeType}.`);
+      textContent = '';
     }
+    // ---------------------------------------------------
 
-    // Crea chunks del testo (dividi in sezioni più piccole)
-    const chunks = createChunks(textContent, 1000); // Puoi regolare la dimensione del chunk
+    // Crea chunks del testo
+    const chunks = createChunks(textContent, 1000);
 
     // Processa ogni chunk
     for (let i = 0; i < chunks.length; i++) {
@@ -132,24 +126,18 @@ exports.handler = async (event, context) => {
           content: chunk,
           embedding: embedding,
           modified_time: metadata.data.modifiedTime,
-          folder_path: folderPath, // Salva il percorso della cartella
-          tags: tags // Salva i tag
+          folder_path: folderPath,
+          tags: tags
         });
 
       if (error) {
         console.error('Errore inserimento Supabase:', error);
+      } else {
+        console.log(`Documento ${fileId}, chunk ${i} inserito/aggiornato con successo.`);
       }
     }
 
-    // Gestione della cancellazione: Questo è un processo più avanzato.
-    // Google Drive Webhooks indicano solo che una risorsa è cambiata.
-    // Per sapere se un file è stato cancellato, dovresti idealmente:
-    // 1. Controllare se il fileId esiste ancora in Drive (eseguendo un drive.files.get).
-    // 2. Se drive.files.get fallisce con "file not found", significa che è stato cancellato.
-    // 3. A quel punto, elimini le righe da Supabase:
-    //    await supabase.from('documents').delete().eq('file_id', fileId);
-    // Questo richiede un try-catch intorno a drive.files.get e una logica aggiuntiva.
-    // Per ora, concentriamoci su ingestione e aggiornamento.
+    // Gestione della cancellazione (logica attuale: non implementata qui)
 
     return {
       statusCode: 200,
@@ -157,7 +145,7 @@ exports.handler = async (event, context) => {
     };
 
   } catch (error) {
-    console.error('Errore webhook:', error);
+    console.error('Errore webhook generale:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: `Errore del server: ${error.message}` })
@@ -171,19 +159,18 @@ function createChunks(text, chunkSize) {
   if (!text || text.length === 0) {
       return chunks;
   }
-  const words = text.split(/\s+/); // Divide per spazi per mantenere le parole intere
+  const words = text.split(/\s+/);
   let currentChunk = [];
   let currentLength = 0;
 
   for (const word of words) {
-    // Stima la dimensione del chunk in base ai caratteri
     if (currentLength + word.length + 1 > chunkSize && currentChunk.length > 0) {
       chunks.push(currentChunk.join(' '));
       currentChunk = [];
       currentLength = 0;
     }
     currentChunk.push(word);
-    currentLength += word.length + 1; // +1 per lo spazio
+    currentLength += word.length + 1;
   }
   if (currentChunk.length > 0) {
     chunks.push(currentChunk.join(' '));
