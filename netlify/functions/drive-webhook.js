@@ -3,6 +3,11 @@ const { createClient } = require('@supabase/supabase-js');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 exports.handler = async (event, context) => {
+  // *** AGGIUNGI QUESTE DUE RIGHE QUI, ALL'INIZIO DELLA FUNZIONE exports.handler ***
+  console.log('drive-webhook function started');
+  console.log('Event body:', event.body);
+  // ********************************************************************************
+
   try {
     // Configurazione clients
     const supabase = createClient(
