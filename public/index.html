@@ -179,6 +179,17 @@
             z-index: 10;
             padding: 0 1rem;
         }
+        /* Mobile adjustments for hero title */
+        @media (max-width: 767px) {
+            .hero-section h1 {
+                font-size: 3.5rem; /* Smaller for mobile */
+                line-height: 1.1;
+            }
+            .hero-section p {
+                font-size: 1.25rem; /* Slightly smaller for mobile paragraphs */
+            }
+        }
+
 
         /* Animazioni per elementi on scroll */
         .animate-on-scroll {
@@ -270,8 +281,8 @@
 
     <section id="hero" class="hero-section text-white flex flex-col items-center justify-center pt-24 pb-12 rounded-b-xl">
         <div class="hero-content text-center animate-on-scroll">
-            <h1 class="text-7xl md:text-9xl font-bold mb-6 drop-shadow-lg">LIFE IS MUSIC</h1>
-            <p class="text-xl md:text-3xl italic font-light max-w-3xl mx-auto mb-8">
+            <h1 class="text-7xl md:text-8xl lg:text-9xl font-bold mb-6 drop-shadow-lg">LIFE IS MUSIC</h1>
+            <p class="text-lg md:text-xl lg:text-3xl italic font-light max-w-3xl mx-auto mb-8">
                 Un'esperienza immersiva che celebra la vita, il ritmo e l'energia indomita dagli anni '70 al 2000.
             </p>
             <a href="#intro" class="mt-8 inline-block bg-accent-gold text-primary-bg-dark font-bold py-4 px-10 rounded-full shadow-xl hover:bg-yellow-400 transition-all duration-300 transform hover:scale-105 text-lg">
@@ -283,11 +294,14 @@
     <main class="container mx-auto p-4 md:p-8 mt-16">
         <section id="intro" class="card mb-16 animate-on-scroll">
             <h2 class="text-5xl font-bold mb-8 text-accent-gold">INTRODUZIONE: La Visione di "Life is MUSIC"</h2>
+            <p class="mb-4 text-lg">
+                "Life is MUSIC" rappresenta un'iniziativa ambiziosa nel panorama dell'intrattenimento musicale dal vivo. Concepito come un'esperienza immersiva che trascende il concetto tradizionale di concerto o tributo, lo show celebra l'essenza della musica e della danza dagli anni '70 ai primi anni 2000.
+            </p>
             <p class="mb-6 text-lg">
-                "Life is MUSIC" rappresenta un'iniziativa ambiziosa nel panorama dell'intrattenimento musicale dal vivo. Concepito come un'esperienza immersiva che trascende il concetto tradizionale di concerto o tributo, lo show celebra l'essenza della musica e della danza dagli anni '70 ai primi anni 2000. Il progetto mira a creare un fenomeno commerciale/culturale capace di connettere generazioni diverse attraverso la capacità di penetrazione di un patrimonio musicale intramontabile, reinterpretato con professionalità.
+                Il progetto mira a creare un fenomeno commerciale/culturale capace di connettere generazioni diverse attraverso la capacità di penetrazione di un patrimonio musicale intramontabile, reinterpretato con professionalità e passione.
             </p>
             <p class="text-lg">
-                Questo documento funge da piano strategico consolidato, frutto dell'analisi e della riorganizzazione di molto lavoro. L'obiettivo è fornire una visione chiara, coerente e professionale del progetto, delineando gli aspetti artistici, di business, di marketing e operativi in modo strutturato e logico, che rispecchi la serietà e il potenziale di "Life is MUSIC".
+                Questo documento funge da piano strategico consolidato, frutto dell'analisi e della riorganizzazione di un vasto lavoro. L'obiettivo è fornire una visione chiara, coerente e professionale del progetto. Vengono delineate gli aspetti artistici, di business, di marketing e operativi in modo strutturato e logico, rispecchiando la serietà e il potenziale di "Life is MUSIC".
             </p>
         </section>
 
@@ -295,18 +309,24 @@
             <h2 class="text-5xl font-bold mb-8 text-accent-gold">CAPITOLO 1: Il Concept Strategico e l'Architettura dello Show</h2>
             
             <h3 class="text-3xl font-bold mb-6 text-accent-gold-light">1.1 Executive Summary: Visione, Prodotto e Mercato</h3>
+            <p class="mb-4 text-lg">
+                "Life is MUSIC" è un innovativo prodotto di intrattenimento musicale dal vivo. È ideato per coinvolgere un pubblico ampio e trasversale, con un focus sul target demografico <strong class="text-accent-gold">25-55</strong> anni. Questo segmento è caratterizzato da propensione alla nostalgia e capacità di spesa.
+            </p>
             <p class="mb-6 text-lg">
-                "Life is MUSIC" è un innovativo prodotto di intrattenimento musicale dal vivo, ideato per coinvolgere un pubblico ampio e trasversale, con un focus sul target demografico <strong class="text-accent-gold">25-55</strong> anni, caratterizzato da propensione alla nostalgia e capacità di spesa. Si distingue dalle generiche cover band o tributi come una vera e propria <strong class="text-accent-gold">show-experience</strong>: un evento articolato di 2 ore e 45 minuti (inclusivo di intervallo) che combina l'eccellenza musicale di una band dal vivo di 11 elementi, la potenza vocale di 4 performer e l'impatto visivo di 6 ballerini professionisti.
+                Si distingue dalle generiche cover band o tributi come una vera e propria <strong class="text-accent-gold">show-experience</strong>. Si tratta di un evento articolato di 2 ore e 45 minuti (inclusivo di intervallo) che combina l'eccellenza musicale di una band dal vivo di 11 elementi, la potenza vocale di 4 performer e l'impatto visivo di 6 ballerini professionisti.
             </p>
 
             <h4 class="text-2xl font-bold mb-4 text-accent-gold-light">Il Prodotto</h4>
+            <p class="mb-4 text-lg">
+                Lo spettacolo è intrinsecamente modulare e scalabile, rendendolo ideale per diverse tipologie di location e contesti. Dalle arene estive e agli eventi corporate di alto profilo, ai teatri tradizionali come il Teatro Cartiere Carrara o il Teatro Puccini a Firenze.
+            </p>
             <p class="mb-6 text-lg">
-                Lo spettacolo è intrinsecamente modulare e scalabile, rendendolo ideale per diverse tipologie di location e contesti: dai teatri tradizionali (come il Teatro Cartiere Carrara o il Teatro Puccini a Firenze) alle arene estive e agli eventi corporate di alto profilo. La scaletta è elaborata, selezionando hit con alto BPM e forte impatto emotivo, perseguendo un coinvolgimento dinamico e continuo del pubblico. La direzione dello spettacolo è intrinsecamente creativa e innovativa, non si limita a suonare e ballare, ma costruisce un'esperienza narrativa e visiva completa, sfruttando elementi scenici, luci e interazione per un impatto totale.
+                La scaletta è elaborata con cura, selezionando hit con alto BPM e forte impatto emotivo, perseguendo un coinvolgimento dinamico e continuo del pubblico. La direzione dello spettacolo è intrinsecamente creativa e innovativa: non si limita a suonare e ballare, ma costruisce un'esperienza narrativa e visiva completa, sfruttando elementi scenici, luci e interazione per un impatto totale.
             </p>
 
             <h4 class="text-2xl font-bold mb-4 text-accent-gold-light">La Sfida e la Soluzione Innovativa</h4>
             <p class="mb-4 text-lg">
-                Il progetto nasce con una sfida strutturale: l'assenza di un capitale iniziale significativo. Questa apparente limitazione si trasforma in un elemento distintivo e strategico:
+                Il progetto nasce con una sfida strutturale: l'assenza di un capitale iniziale significativo. Questa apparente limitazione si trasforma in un elemento distintivo e strategico.
             </p>
             <ul class="list-disc list-inside ml-8 mb-6 text-lg">
                 <li class="mb-2"><strong class="text-accent-gold">La Sfida:</strong> Mancanza di un budget di partenza per investimenti massivi.</li>
@@ -315,7 +335,7 @@
 
             <h4 class="text-2xl font-bold mb-4 text-accent-gold-light">Ecosistema del Progetto: Un Ciclo Virtuoso</h4>
             <p class="mb-4 text-lg">
-                Il funzionamento di "Life is MUSIC" può essere visualizzato come un ciclo virtuoso e autoalimentante:
+                Il funzionamento di "Life is MUSIC" può essere visualizzato come un ciclo virtuoso e autoalimentante.
             </p>
             <ul class="list-disc list-inside ml-8 mb-6 text-lg">
                 <li class="mb-2"><strong class="text-accent-gold">TALENTO (Cast):</strong> Gli artisti, scelti per la loro eccellenza e mentalità imprenditoriale, sono il motore creativo.</li>
@@ -516,8 +536,11 @@
 
         <section id="capitolo2" class="card mb-16 animate-on-scroll">
             <h2 class="text-5xl font-bold mb-8 text-accent-gold">CAPITOLO 2: Il Modello di Partnership "Equity for Talent"</h2>
+            <p class="mb-4 text-lg">
+                Questo capitolo illustra in dettaglio il modello finanziario e legale su cui si fonda "Life is MUSIC".
+            </p>
             <p class="mb-6 text-lg">
-                Questo capitolo illustra in dettaglio il modello finanziario e legale su cui si fonda "Life is MUSIC". L'approccio "Equity for Talent" è una risposta strategica all'assenza di capitale iniziale, trasformando la mancanza di un budget in un vantaggio competitivo che attrae talenti con una visione imprenditoriale e a lungo termine.
+                L'approccio "Equity for Talent" è una risposta strategica all'assenza di capitale iniziale, trasformando la mancanza di un budget in un vantaggio competitivo che attrae talenti con una visione imprenditoriale e a lungo termine.
             </p>
 
             <h3 class="text-3xl font-bold mb-6 text-accent-gold-light">2.1 La Filosofia "Equity for Talent"</h3>
@@ -526,8 +549,11 @@
             </p>
 
             <h3 class="text-3xl font-bold mb-6 text-accent-gold-light">2.2 Il Quadro Legale: Contratto di Associazione in Partecipazione (Art. 2549 c.c.)</h3>
+            <p class="mb-4 text-lg">
+                La collaborazione tra la produzione e il cast artistico è formalizzata attraverso il Contratto di Associazione in Partecipazione, disciplinato dall'Art. 2549 del Codice Civile italiano.
+            </p>
             <p class="mb-6 text-lg">
-                La collaborazione tra la produzione e il cast artistico è formalizzata attraverso il Contratto di Associazione in Partecipazione, disciplinato dall'Art. 2549 del Codice Civile italiano. Questo strumento legale definisce un rapporto trasparente e solido, ideale per progetti in fase di startup.
+                Questo strumento legale definisce un rapporto trasparente e solido, ideale per progetti in fase di startup.
             </p>
             <ul class="list-disc list-inside ml-8 mb-6 text-lg">
                 <li class="mb-2"><strong class="text-accent-gold">Ruoli:</strong>
@@ -552,14 +578,110 @@
                 <li><strong class="text-accent-gold">Uguale: Utile Lordo:</strong> La differenza tra Ricavo Lordo e Costi Vivi.</li>
             </ol>
 
-            <h4 class="text-2xl font-bold mb-4 text-accent-gold-light">Divisione dell'Utile Lordo:</h4>
-            <p class="mb-4 text-lg">L'Utile Lordo viene ripartito secondo percentuali fisse:</p>
-            <ul class="list-disc list-inside ml-8 text-lg">
-                <li class="mb-2"><strong class="text-accent-gold">25% alla Produzione:</strong> Questa quota è destinata a coprire i costi di gestione generali del progetto, le spese di marketing e sviluppo continue, e la creazione di un fondo di cassa strategico per futuri investimenti e crescita strutturale.</li>
-                <li><strong class="text-accent-gold">75% al Monte Ingaggi Artistico:</strong> Questa porzione dell'utile è interamente dedicata alla remunerazione del cast artistico, suddivisa ulteriormente in base a un sistema di quote predefinite.</li>
+            <h4 class="text-2xl font-bold mb-4 text-accent-gold-light">Tabella di Ripartizione Quote (Totale 30 quote):</h4>
+            <p class="mb-4 text-lg">
+                Per garantire equità e trasparenza nella distribuzione del Monte Ingaggi Artistico, è stato stabilito un sistema di quote totali (30 quote) ripartite tra i diversi ruoli del cast.
+            </p>
+            <div class="overflow-x-auto mb-8">
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th>Ruolo</th>
+                            <th>N. Artisti</th>
+                            <th>Quote per Artista</th>
+                            <th>Totale Quote</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cantanti</td>
+                            <td>4</td>
+                            <td>2.0</td>
+                            <td>8.0</td>
+                        </tr>
+                        <tr>
+                            <td>Coreografa/Ballerina</td>
+                            <td>1</td>
+                            <td>2.0</td>
+                            <td>2.0</td>
+                        </tr>
+                        <tr>
+                            <td>Ballerini</td>
+                            <td>5</td>
+                            <td>1.5</td>
+                            <td>7.5</td>
+                        </tr>
+                        <tr>
+                            <td>Direttore Musicale/Band Leader</td>
+                            <td>1</td>
+                            <td>2.0</td>
+                            <td>2.0</td>
+                        </tr>
+                        <tr>
+                            <td>Musicisti (Sezione Ritmica/Tastiere)</td>
+                            <td>3</td>
+                            <td>1.5</td>
+                            <td>4.5</td>
+                        </tr>
+                        <tr>
+                            <td>Musicisti (Sezione Fiati)</td>
+                            <td>4</td>
+                            <td>1.5</td>
+                            <td>6.0</td>
+                        </tr>
+                        <tr class="font-bold text-accent-gold">
+                            <td>TOTALE</td>
+                            <td>18</td>
+                            <td></td>
+                            <td>30.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 class="text-2xl font-bold mb-4 text-accent-gold-light">2.3.1 La Remunerazione del Team di Produzione e Fondatori</h4>
+            <p class="mb-4 text-lg">
+                Il modello di "Life is MUSIC" riconosce il contributo multidimensionale dei suoi fondatori, che non sono solo figure strategiche e di gestione, ma anche investitori attivi nel progetto.
+            </p>
+            <p class="mb-4 text-lg">
+                I due co-fondatori operano con pari oneri e beneficiano di pari remunerazione per tutte le attività legate alla produzione e allo sviluppo del business, riflettendo il loro impegno equo e il rischio condiviso. La loro compensazione si articola attraverso due canali distinti ma complementari, garantendo piena trasparenza e chiarezza sul valore di ogni ruolo.
+            </p>
+            <p class="mb-6 text-lg">
+                Questo modello di remunerazione è strutturato per offrire una chiara distinzione tra il contributo artistico (premiato dal 75% del monte ingaggi) e il lavoro di gestione, sviluppo e assunzione del rischio (premiato dal 25% della quota di produzione). La totale parità di oneri e remunerazione tra i due co-fondatori nella gestione della produzione è un principio fondamentale che mira a fornire a tutti i membri del team una comprensione approfondita del valore e del rischio associato alla guida del progetto, rafforzando un senso di equità e un obiettivo comune e condiviso.
+            </p>
+
+            <h4 class="text-2xl font-bold mb-4 text-accent-gold-light">Esempio di Proiezione di Guadagno (una singola data):</h4>
+            <p class="mb-4 text-lg">
+                Per illustrare il funzionamento pratico del modello, consideriamo una proiezione basata su un cachet medio:
+            </p>
+            <ul class="list-disc list-inside ml-8 mb-6 text-lg">
+                <li class="mb-2"><strong class="text-accent-gold">Cachet pagato dal promoter:</strong> €12.000</li>
+                <li class="mb-2"><strong class="text-accent-gold">Meno: Costi vivi (service, viaggi):</strong> - €4.000</li>
+                <li class="mb-2"><strong class="text-accent-gold">Utile Lordo:</strong> €8.000</li>
+                <li class="mb-2"><strong class="text-accent-gold">Quota Produzione (25% di €8.000):</strong> €2.000
+                    <p class="text-sm italic ml-4">(Questa quota viene utilizzata per coprire le spese operative della produzione e remunerare l'investimento e il lavoro gestionale/imprenditoriale dei fondatori, equamente divisi tra i due co-fondatori.)</p>
+                </li>
+                <li class="mb-2"><strong class="text-accent-gold">Monte Ingaggi Artistico (75% di €8.000):</strong> €6.000</li>
+                <li class="mb-2"><strong class="text-accent-gold">Valore di 1 quota:</strong> €6.000 / 30 quote = €200 per quota</li>
+                <li class="mb-2"><strong class="text-accent-gold">Compenso Cantante (2 quote):</strong> €400</li>
+                <li><strong class="text-accent-gold">Compenso Ballerino (1.5 quote):</strong> €300</li>
             </ul>
-            <p class="mt-4 text-lg">
-                (La tabella dettagliata di ripartizione delle quote non è stata fornita nel documento.)
+            <p class="mb-6 text-lg">
+                Questo sistema non solo incentiva il massimo impegno da parte di tutti i membri del cast, ma allinea intrinsecamente gli interessi di ogni performer con il successo complessivo dello show, trasformando l'eccellenza artistica in un vantaggio economico tangibile per tutti.
+            </p>
+
+            <h3 class="text-3xl font-bold mb-6 text-accent-gold-light">2.4 Lettera d'Intenti (Template Operativo)</h3>
+            <p class="mb-4 text-lg">
+                La Lettera d'Intenti è un documento preliminare al contratto formale di Associazione in Partecipazione. Il suo scopo è bloccare l'impegno del cast in modo chiaro e trasparente fin dalle prime fasi, comunicando il modello di collaborazione e le aspettative reciproche.
+            </p>
+            <p class="mb-6 text-lg">
+                Serve a consolidare l'accordo verbale in attesa della formalizzazione contrattuale completa, garantendo che tutti i futuri partner siano allineati sulla visione e sulla struttura di "Equity for Talent".
+            </p>
+            <p class="mb-6 text-lg">
+                A tal fine, un Template di Lettera d'Intenti per Artisti sarà reso disponibile per facilitare e standardizzare questo processo. Per future collaborazioni con sponsor e partner commerciali, saranno sviluppati e collegati qui Template di Contratto di Sponsorizzazione e Template di Accordo Commerciale.
+            </p>
+            <p class="text-lg">
+                Questo capitolo evidenzia come "Life is MUSIC" abbia trasformato una potenziale debolezza (assenza di capitale iniziale) in una strategia innovativa e motivante per costruire un team di alto livello intrinsecamente legato al successo del progetto.
             </p>
         </section>
 
@@ -568,7 +690,7 @@
                 <button class="close-button" id="closeAppendixBtn">&times;</button>
                 <h2 class="text-4xl font-bold mb-8 text-accent-gold text-center">Appendice A: Idee per Elevare l'Esperienza dello Spettatore</h2>
                 <p class="text-lg mb-4 text-center">
-                    Di seguito sono presentate le idee disponibili per elevare l'esperienza dello spettatore. La lista completa (dall'idea n.1) non è accessibile al momento.
+                    **Attenzione:** Di seguito sono presentate le idee disponibili per elevare l'esperienza dello spettatore (n. 43-50). La lista completa (dall'idea n.1) non è accessibile al momento a causa di limitazioni nel recupero dei dati.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-lg">
                     <div class="appendix-item">
