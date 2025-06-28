@@ -18,8 +18,10 @@
   "author": "Fireflies Light",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.2",
+    "google-auth-library": "^10.1.0",
+    "googleapis": "^150.0.1",
+    "langchain": "^0.3.29",
     "node-fetch": "^3.3.2"
   }
 }
-
-

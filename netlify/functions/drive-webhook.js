@@ -1,189 +1,221 @@
+// drive-webhook.js
+
+// Importazioni necessarie
 const { google } = require('googleapis');
+const { GoogleAuth } = require('google-auth-library');
 const { createClient } = require('@supabase/supabase-js');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter');
+// Se non hai installato langchain/text_splitter, puoi implementare un semplice splitter manuale
+// o installare: npm install langchain
 
-exports.handler = async (event, context) => {
-  // --- LOG DI DEBUG AGGIUNTIVI ---
-  console.log('drive-webhook function started');
-  console.log('Event raw body:', event.body); // Questo mostrerà il body grezzo (dovrebbe essere vuoto)
-  console.log('Event headers:', JSON.stringify(event.headers, null, 2)); // Questo mostrerà tutti gli header
-  // ---------------------------------
+// Inizializzazione del client Supabase
+// Assicurati che SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY siano impostati come variabili d'ambiente in Netlify
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Usa la service role key per bypassare RLS
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-  try {
-    // Configurazione clients
-    const supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
+// Chiave API Gemini (assicurati che GEMINI_API_KEY sia impostata come variabile d'ambiente in Netlify)
+const geminiApiKey = process.env.GEMINI_API_KEY;
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
+// Funzione helper per l'elaborazione del contenuto del documento: splitting, embedding, upserting
+async function processDocument(fileId, content, fileName) {
+    try {
+        console.log(`Starting processing for document: "${fileName}" (ID: ${fileId})`);
 
-    // Configurazione Google Drive API
-    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-    const auth = new google.auth.GoogleAuth({
-      credentials: serviceAccount,
-      scopes: ['https://www.googleapis.com/auth/drive.readonly']
+        // Inizializza lo splitter di testo
+        const textSplitter = new RecursiveCharacterTextSplitter({
+            chunkSize: 1000,
+            chunkOverlap: 200,
+        });
+
+        // Dividi il contenuto del documento in chunk
+        const chunks = await textSplitter.splitText(content);
+        console.log(`Document split into ${chunks.length} chunks.`);
+
+        // Prepara i dati per l'upsert in Supabase
+        const documentsToUpsert = [];
+        for (const [index, chunk] of chunks.entries()) {
+            // Genera l'embedding per ogni chunk usando l'API Gemini
+            const embeddingResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent?key=${geminiApiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'models/embedding-001',
+                    content: {
+                        parts: [{ text: chunk }],
+                    },
+                }),
+            });
+
+            if (!embeddingResponse.ok) {
+                const errorBody = await embeddingResponse.text();
+                throw new Error(`Gemini embedding API error: ${embeddingResponse.status} - ${embeddingResponse.statusText} - ${errorBody}`);
+            }
+
+            const embeddingData = await embeddingResponse.json();
+            const embedding = embeddingData.embedding.values;
+
+            documentsToUpsert.push({
+                id: `${fileId}-${index}`, // ID univoco per ogni chunk (fileId + indice del chunk)
+                file_id: fileId,
+                content: chunk,
+                embedding: embedding,
+                file_name: fileName,
+                // Potresti aggiungere anche un campo 'modified_at' per tracciare l'ultima modifica del file
+                // modified_at: new Date().toISOString()
+            });
+        }
+
+        // Elimina i vecchi chunk per questo file_id prima di upsertare i nuovi.
+        // Questo è importante se il numero di chunk o il loro contenuto cambia,
+        // per evitare duplicati o "chunk fantasma" da vecchie versioni del file.
+        console.log(`Deleting existing chunks for file_id: ${fileId} from Supabase.`);
+        const { error: deleteOldError } = await supabase
+            .from('documents')
+            .delete()
+            .eq('file_id', fileId);
+
+        if (deleteOldError) {
+            console.error(`Error deleting old chunks for ${fileId}:`, deleteOldError);
+            throw deleteOldError;
+        }
+        console.log(`Old chunks for ${fileId} deleted successfully.`);
+
+
+        // Upsert (inserisci o aggiorna) i nuovi chunk in Supabase
+        const { error: upsertError } = await supabase
+            .from('documents')
+            .upsert(documentsToUpsert, { onConflict: 'id', ignoreDuplicates: false }); // Upsert per ID del chunk
+
+        if (upsertError) {
+            throw upsertError;
+        }
+
+        console.log(`Successfully upserted ${chunks.length} new/updated chunks for "${fileName}" into Supabase.`);
+
+    } catch (error) {
+        console.error(`Error processing document "${fileName}" (ID: ${fileId}):`, error);
+        throw error; // Rilancia l'errore per essere catturato dal gestore principale
+    }
+}
+
+
+// Funzione principale del webhook
+exports.handler = async function(event, context) {
+    console.log("drive-webhook function started");
+
+    // Inizializzazione Google Drive API con le credenziali del servizio
+    const auth = new GoogleAuth({
+        keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+        scopes: ['https://www.googleapis.com/auth/drive.readonly'], // Scope di sola lettura
     });
-
     const drive = google.drive({ version: 'v3', auth });
 
-    // --- MODIFICA CRITICA: ESTRAZIONE fileId DA X-Goog-Resource-Uri ---
-    const resourceUriHeader = event.headers['X-Goog-Resource-Uri'] || event.headers['x-goog-resource-uri'];
-    let fileId = null;
+    try {
+        // Estrai il fileId dall'header X-Goog-Resource-Uri
+        // L'URI ha il formato: https://www.googleapis.com/drive/v3/files/FILE_ID?alt=json&null
+        const fileId = event.headers['x-goog-resource-uri'].split('files/')[1].split('?')[0];
+        console.log(`Processed fileId extracted: ${fileId}`);
 
-    if (resourceUriHeader) {
-      // L'URI sarà qualcosa come: https://www.googleapis.com/drive/v3/files/YOUR_FOLDER_ID?alt=json&null
-      // Estraiamo l'ID dall'ultima parte del pathname
-      const url = new URL(resourceUriHeader);
-      fileId = url.pathname.split('/').pop();
-    } else {
-      // Come fallback, se per qualche motivo X-Goog-Resource-Uri non c'è, usiamo X-Goog-Resource-Id
-      // Ma il metodo URI è più robusto per il tipo di watch che stiamo usando su cartelle.
-      fileId = event.headers['X-Goog-Resource-Id'] || event.headers['x-goog-resource-id'];
-    }
+        const resourceState = event.headers['x-goog-resource-state'];
+        console.log(`Resource State: ${resourceState}`);
 
-    if (!fileId) {
-        console.error('Errore grave: ID risorsa (file/cartella) non trovato negli header X-Goog-Resource-Uri o X-Goog-Resource-Id del webhook.');
+        // Gestione di eliminazione o cestino del file
+        if (resourceState === 'not_found' || resourceState === 'trash') {
+            console.log(`File ${fileId} was trashed or not found. Deleting from Supabase.`);
+            // Elimina tutti i chunk associati a questo file_id da Supabase
+            const { error: deleteError } = await supabase
+                .from('documents')
+                .delete()
+                .eq('file_id', fileId);
+
+            if (deleteError) {
+                console.error(`Error deleting document ${fileId} from Supabase:`, deleteError);
+                throw deleteError; // Rilancia per indicare un errore 500
+            }
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ message: 'File deleted or trashed, removed from index.' }),
+            };
+        }
+
+        // Ottieni i metadati del file per determinarne il tipo MIME e il nome
+        const fileMetadata = await drive.files.get({
+            fileId: fileId,
+            fields: 'mimeType,name'
+        });
+
+        const mimeType = fileMetadata.data.mimeType;
+        const fileName = fileMetadata.data.name;
+        let fileContent = '';
+
+        console.log(`Processing file: "${fileName}" (ID: ${fileId}) with MIME type: ${mimeType}`);
+
+        // Logica condizionale basata sul tipo MIME per scaricare/esportare il contenuto
+        if (mimeType.startsWith('application/vnd.google-apps.')) {
+            // È un file di Google Docs Editor (Documento, Foglio, Presentazione, ecc.)
+            console.log(`Exporting Google Docs Editor file to text/plain.`);
+            const exportResponse = await drive.files.export({
+                fileId: fileId,
+                mimeType: 'text/plain', // Esporta come testo semplice
+            }, { responseType: 'stream' }); // Riceve la risposta come stream
+
+            // Leggi lo stream per ottenere il contenuto completo
+            fileContent = await new Promise((resolve, reject) => {
+                let content = '';
+                exportResponse.data
+                    .on('data', chunk => content += chunk)
+                    .on('end', () => resolve(content))
+                    .on('error', err => reject(err));
+            });
+            console.log(`Exported content length: ${fileContent.length}`);
+
+        } else if (mimeType.startsWith('text/')) {
+            // È un file di testo normale (es. .txt)
+            console.log(`Downloading plain text file.`);
+            const fileResponse = await drive.files.get({
+                fileId: fileId,
+                alt: 'media' // Usa alt=media per i contenuti binari (come un .txt)
+            }, { responseType: 'stream' }); // Riceve la risposta come stream
+
+            // Leggi lo stream per ottenere il contenuto completo
+            fileContent = await new Promise((resolve, reject) => {
+                let content = '';
+                fileResponse.data
+                    .on('data', chunk => content += chunk)
+                    .on('end', () => resolve(content))
+                    .on('error', err => reject(err));
+            });
+            console.log(`Downloaded content length: ${fileContent.length}`);
+
+        } else {
+            // Tipo di file non supportato
+            console.warn(`Unsupported file type for RAG: "${fileName}" (ID: ${fileId}) with MIME type: ${mimeType}. Skipping.`);
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ message: `Unsupported file type: ${mimeType}. Only Google Docs Editor files (Documents, Sheets, Slides) and plain text files are supported.` }),
+            };
+        }
+
+        // Processa il contenuto estratto (dividi, crea embeddings, upsert in Supabase)
+        await processDocument(fileId, fileContent, fileName);
+
         return {
-            statusCode: 400,
-            body: JSON.stringify({ error: 'Missing resource ID in webhook headers.' })
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Webhook processed successfully and document indexed.' }),
+        };
+
+    } catch (error) {
+        console.error("General webhook error:", error);
+        // Log più dettagliati per il debugging degli errori API di Google
+        if (error.response && error.response.data) {
+            console.error("Google API Error Response Data:", error.response.data);
+        }
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: error.message || "Internal Server Error" }),
         };
     }
-    console.log('Processed fileId extracted:', fileId);
-
-    // Controlla lo stato della risorsa per capire il tipo di evento
-    const resourceState = event.headers['X-Goog-Resource-State'] || event.headers['x-goog-resource-state'];
-    console.log('Resource State:', resourceState);
-    // -------------------------------------------------------------
-
-    // --- LOGICA ESISTENTE PER METADATI ESTESI ---
-    // Ottieni metadati del file, inclusi i parent folder per costruire il folder_path
-    // Questa chiamata ora userà il `fileId` correttamente estratto.
-    const metadata = await drive.files.get({
-      fileId: fileId,
-      fields: 'id,name,mimeType,modifiedTime,parents'
-    });
-
-    // Costruisci il folder_path (semplificato)
-    let folderPath = null;
-    if (metadata.data.parents && metadata.data.parents.length > 0) {
-      try {
-        const parentFolder = await drive.files.get({
-          fileId: metadata.data.parents[0],
-          fields: 'name'
-        });
-        folderPath = `/${parentFolder.data.name}`;
-      } catch (parentError) {
-        console.warn(`Impossibile recuperare il nome della cartella genitore per ${fileId}:`, parentError.message);
-        folderPath = null;
-      }
-    }
-
-    // Estrazione dei tag
-    let tags = [];
-    // ------------------------------------------------------------------
-
-    // --- ESTRAZIONE CONTENUTO FILE (LOGICA ESISTENTE) ---
-    const fileResponse = await drive.files.get({
-      fileId: fileId,
-      alt: 'media'
-    });
-
-    let textContent = '';
-    const fileMimeType = metadata.data.mimeType;
-
-    // Gestisci diversi tipi di file
-    if (fileMimeType.includes('text/plain')) {
-      textContent = fileResponse.data;
-    } else if (fileMimeType.includes('application/pdf')) {
-      console.warn(`Tipo di file non supportato per la parsificazione del contenuto: ${fileMimeType}. Saltando il contenuto.`);
-      textContent = '';
-    } else if (fileMimeType.includes('application/vnd.google-apps.document')) {
-      const docResponse = await drive.files.export({
-        fileId: fileId,
-        mimeType: 'text/plain'
-      });
-      textContent = docResponse.data;
-    } else {
-      console.warn(`Tipo di file non supportato per l'estrazione del testo: ${fileMimeType}.`);
-      textContent = '';
-    }
-    // ---------------------------------------------------
-
-    // Crea chunks del testo
-    const chunks = createChunks(textContent, 1000);
-
-    // Processa ogni chunk
-    for (let i = 0; i < chunks.length; i++) {
-      const chunk = chunks[i];
-
-      // Se il chunk è vuoto, salta l'embedding
-      if (!chunk.trim()) {
-          console.warn(`Chunk vuoto per il file ${fileId}, chunk_index ${i}. Saltando embedding.`);
-          continue;
-      }
-      
-      // Crea embedding del chunk
-      const result = await model.embedContent(chunk);
-      const embedding = result.embedding.values;
-
-      // Inserisci o aggiorna in Supabase (UPSERT)
-      const { error } = await supabase
-        .from('documents')
-        .upsert({
-          file_id: fileId,
-          file_name: metadata.data.name,
-          chunk_index: i,
-          content: chunk,
-          embedding: embedding,
-          modified_time: metadata.data.modifiedTime,
-          folder_path: folderPath,
-          tags: tags
-        });
-
-      if (error) {
-        console.error('Errore inserimento Supabase:', error);
-      } else {
-        console.log(`Documento ${fileId}, chunk ${i} inserito/aggiornato con successo.`);
-      }
-    }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: 'File processato con successo (o saltato se non supportato).' })
-    };
-
-  } catch (error) {
-    console.error('Errore webhook generale:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: `Errore del server: ${error.message}` })
-    };
-  }
 };
-
-// Funzione helper per la creazione dei chunk
-function createChunks(text, chunkSize) {
-  const chunks = [];
-  if (!text || text.length === 0) {
-      return chunks;
-  }
-  const words = text.split(/\s+/);
-  let currentChunk = [];
-  let currentLength = 0;
-
-  for (const word of words) {
-    if (currentLength + word.length + 1 > chunkSize && currentChunk.length > 0) {
-      chunks.push(currentChunk.join(' '));
-      currentChunk = [];
-      currentLength = 0;
-    }
-    currentChunk.push(word);
-    currentLength += word.length + 1;
-  }
-  if (currentChunk.length > 0) {
-    chunks.push(currentChunk.join(' '));
-  }
-  return chunks;
-}
