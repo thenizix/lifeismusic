@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 exports.handler = async (event, context) => {
   // --- LOG DI DEBUG AGGIUNTIVI ---
   console.log('drive-webhook function started');
-  console.log('Event raw body:', event.body); // Questo mostrerà il body grezzo
+  console.log('Event raw body:', event.body); // Questo mostrerà il body grezzo (dovrebbe essere vuoto)
   console.log('Event headers:', JSON.stringify(event.headers, null, 2)); // Questo mostrerà tutti gli header
   // ---------------------------------
 
@@ -23,34 +23,46 @@ exports.handler = async (event, context) => {
     const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
     const auth = new google.auth.GoogleAuth({
       credentials: serviceAccount,
-      scopes: ['https://www.googleapis.com/auth/drive.readonly'] // Assicurati che l'account di servizio abbia i permessi corretti
+      scopes: ['https://www.googleapis.com/auth/drive.readonly']
     });
 
     const drive = google.drive({ version: 'v3', auth });
 
-    // --- ESTRAZIONE fileId DAGLI HEADERS (MODIFICA CRITICA) ---
-    // Google Drive spesso invia l'ID della risorsa negli header, non nel body per le notifiche 'watch'
-    const fileId = event.headers['X-Goog-Resource-Id'] || event.headers['x-goog-resource-id'];
+    // --- MODIFICA CRITICA: ESTRAZIONE fileId DA X-Goog-Resource-Uri ---
+    const resourceUriHeader = event.headers['X-Goog-Resource-Uri'] || event.headers['x-goog-resource-uri'];
+    let fileId = null;
+
+    if (resourceUriHeader) {
+      // L'URI sarà qualcosa come: https://www.googleapis.com/drive/v3/files/YOUR_FOLDER_ID?alt=json&null
+      // Estraiamo l'ID dall'ultima parte del pathname
+      const url = new URL(resourceUriHeader);
+      fileId = url.pathname.split('/').pop();
+    } else {
+      // Come fallback, se per qualche motivo X-Goog-Resource-Uri non c'è, usiamo X-Goog-Resource-Id
+      // Ma il metodo URI è più robusto per il tipo di watch che stiamo usando su cartelle.
+      fileId = event.headers['X-Goog-Resource-Id'] || event.headers['x-goog-resource-id'];
+    }
 
     if (!fileId) {
-        console.error('Errore grave: ID risorsa (file/cartella) non trovato negli header X-Goog-Resource-Id del webhook. Il body potrebbe essere vuoto o non un JSON valido per questo tipo di notifica.');
+        console.error('Errore grave: ID risorsa (file/cartella) non trovato negli header X-Goog-Resource-Uri o X-Goog-Resource-Id del webhook.');
         return {
             statusCode: 400,
-            body: JSON.stringify({ error: 'Missing X-Goog-Resource-Id in webhook headers. Event body might be empty or not a valid JSON for this notification type.' })
+            body: JSON.stringify({ error: 'Missing resource ID in webhook headers.' })
         };
     }
-    console.log('Processed fileId from webhook headers:', fileId);
+    console.log('Processed fileId extracted:', fileId);
 
-    // Controlla lo stato della risorsa per capire il tipo di evento (es. 'update', 'trash', 'delete')
+    // Controlla lo stato della risorsa per capire il tipo di evento
     const resourceState = event.headers['X-Goog-Resource-State'] || event.headers['x-goog-resource-state'];
     console.log('Resource State:', resourceState);
     // -------------------------------------------------------------
 
-    // --- LOGICA ESISTENTE PER METADATI ESTESI (SENZA CAMBIAMENTI) ---
+    // --- LOGICA ESISTENTE PER METADATI ESTESI ---
     // Ottieni metadati del file, inclusi i parent folder per costruire il folder_path
+    // Questa chiamata ora userà il `fileId` correttamente estratto.
     const metadata = await drive.files.get({
-      fileId: fileId, // Questo userà il `fileId` estratto dagli headers
-      fields: 'id,name,mimeType,modifiedTime,parents' // Richiedo anche 'parents'
+      fileId: fileId,
+      fields: 'id,name,mimeType,modifiedTime,parents'
     });
 
     // Costruisci il folder_path (semplificato)
@@ -68,7 +80,7 @@ exports.handler = async (event, context) => {
       }
     }
 
-    // Estrazione dei tag (Esempio: potresti usare i customProperties o i nomi dei file per i tag)
+    // Estrazione dei tag
     let tags = [];
     // ------------------------------------------------------------------
 
@@ -106,7 +118,7 @@ exports.handler = async (event, context) => {
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
 
-      // Se il chunk è vuoto (es. file non parsificabile), salta l'embedding
+      // Se il chunk è vuoto, salta l'embedding
       if (!chunk.trim()) {
           console.warn(`Chunk vuoto per il file ${fileId}, chunk_index ${i}. Saltando embedding.`);
           continue;
@@ -136,8 +148,6 @@ exports.handler = async (event, context) => {
         console.log(`Documento ${fileId}, chunk ${i} inserito/aggiornato con successo.`);
       }
     }
-
-    // Gestione della cancellazione (logica attuale: non implementata qui)
 
     return {
       statusCode: 200,
